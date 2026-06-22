@@ -1157,24 +1157,36 @@ function buildThChart(historyData) {
   }
 
   var zones = [
-    {key:'th_AP', name:'A 부조정실', color:'rgba(208,2,27,0.9)'},
-    {key:'th_MC', name:'주조정실',   color:'rgba(29,111,164,0.9)'},
-    {key:'th_MR', name:'통합기계실', color:'rgba(5,150,105,0.9)'},
-    {key:'th_BP', name:'B 부조정실', color:'rgba(217,119,6,0.9)'},
-    {key:'th_BM', name:'B 기계실',   color:'rgba(124,58,237,0.9)'},
-    {key:'th_UP', name:'UPS실',      color:'rgba(107,114,128,0.9)'}
+    {key:'th_AP', name:'A 부조정실', color:'rgba(208,2,27,0.9)',  inputT:'th-AP-t', inputH:'th-AP-h'},
+    {key:'th_MC', name:'주조정실',   color:'rgba(29,111,164,0.9)', inputT:'th-MC-t', inputH:'th-MC-h'},
+    {key:'th_MR', name:'통합기계실', color:'rgba(5,150,105,0.9)', inputT:'th-MR-t', inputH:'th-MR-h'},
+    {key:'th_BP', name:'B 부조정실', color:'rgba(217,119,6,0.9)', inputT:'th-BP-t', inputH:'th-BP-h'},
+    {key:'th_BM', name:'B 기계실',   color:'rgba(124,58,237,0.9)',inputT:'th-BM-t', inputH:'th-BM-h'},
+    {key:'th_UP', name:'UPS실',      color:'rgba(107,114,128,0.9)',inputT:'th-UP-t', inputH:'th-UP-h'}
   ];
+
+  // 오늘 날짜 키 (폴백용)
+  var todayKey = dateKeys[dateKeys.length - 1];
 
   var datasets = zones.map(function(z) {
     var vals = dateKeys.map(function(dateStr) {
+      // 1) 구글 시트 이력 우선
       var matches = historyData.filter(function(h){ return (h.date||'').startsWith(dateStr); });
-      if(!matches.length) return null;
-      var raw = matches[matches.length-1][z.key] || '';
-      if(thMode === 'temp') {
-        var m = raw.match(/([\d.]+)°C/); return m ? parseFloat(m[1]) : null;
-      } else {
-        var m = raw.match(/([\d.]+)%/);  return m ? parseFloat(m[1]) : null;
+      if(matches.length) {
+        var raw = matches[matches.length-1][z.key] || '';
+        if(thMode === 'temp') {
+          var m = raw.match(/([\d.]+)°C/); if(m) return parseFloat(m[1]);
+        } else {
+          var m = raw.match(/([\d.]+)%/);  if(m) return parseFloat(m[1]);
+        }
       }
+      // 2) 이력 없고 오늘 날짜면 → 현재 입력 필드값 사용
+      if(dateStr === todayKey) {
+        var inputId = thMode === 'temp' ? z.inputT : z.inputH;
+        var el = document.getElementById(inputId);
+        if(el && el.value) return parseFloat(el.value);
+      }
+      return null;
     });
     return {
       label: z.name,
