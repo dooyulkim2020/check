@@ -170,7 +170,9 @@ tr:hover td{background:var(--bg)}
 .modal-close{font-size:20px;cursor:pointer;color:var(--muted);background:none;border:none;line-height:1;padding:4px}
 .modal-body{padding:20px 24px}
 .modal-foot{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
-.mform-grid{display:grid;gap:12px}.mform-grid.g2{grid-template-columns:1fr 1fr}.mform-grid.g3{grid-template-columns:1fr 1fr 1fr}
+.mform-grid{display:grid;gap:12px}
+.mform-grid.g2{grid-template-columns:1fr 1fr}
+.mform-grid.g3{grid-template-columns:1fr 1fr 1fr}
 .mfield label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
 .mfield input,.mfield select,.mfield textarea{width:100%;padding:8px 11px;border:1px solid var(--border-dark);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);outline:none}
 .mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--red)}
@@ -200,7 +202,7 @@ tr:hover td{background:var(--bg)}
 </style>
 </head>
 <body>
-<!-- 모달들 -->
+
 <div class="modal-overlay" id="evModal">
   <div class="modal">
     <div class="modal-head"><h3 id="modal-ev-title">이력 추가</h3><button class="modal-close" onclick="closeModal('evModal')">✕</button></div>
@@ -212,635 +214,758 @@ tr:hover td{background:var(--bg)}
       </div>
       <div class="section-divider">증상 / 발견 내용</div>
       <div class="mfield" style="margin-bottom:10px"><label>증상 요약</label><input type="text" id="ev-symptom" placeholder="예) 팬 소음 발생"></div>
-      <div class="mfield" style="margin-bottom:4px"><label>상세 내용</label><textarea id="ev-desc" rows="2" placeholder="발견 경위, 증상 상세 등"></textarea></div>
-      <div class="section-divider">심각도</div>
-      <div class="severity-row" style="margin-bottom:4px">
-        <div class="sev-btn" id="sev-low" onclick="setSev('low')">🟢 낮음<br><span style="font-size:10px;font-weight:400">정상 운영 가능</span></div>
-        <div class="sev-btn" id="sev-mid" onclick="setSev('mid')">🟡 보통<br><span style="font-size:10px;font-weight:400">모니터링 필요</span></div>
-        <div class="sev-btn" id="sev-high" onclick="setSev('high')">🔴 높음<br><span style="font-size:10px;font-weight:400">즉시 조치 필요</span></div>
+      <div class="mfield" style="margin-bottom:4px"><label>상세 내용</label><textarea id="ev-desc" rows="2" placeholder="발견 경위, 증상 상세 명시"></textarea></div>
+      <div class="mfield"><label>중요도</label>
+        <div class="severity-row">
+          <div class="sev-btn" id="sb-low" onclick="setSev('low')">Low</div>
+          <div class="sev-btn" id="sb-mid" onclick="setSev('mid')">Medium</div>
+          <div class="sev-btn" id="sb-high" onclick="setSev('high')">High</div>
+        </div>
       </div>
-      <div class="section-divider">조치 내용</div>
-      <div class="mform-grid g2" style="margin-bottom:10px">
-        <div class="mfield"><label>교체/사용 부품</label><input type="text" id="ev-parts" placeholder="예) 팬 모터"></div>
-        <div class="mfield"><label>외부 업체</label><input type="text" id="ev-vendor" placeholder="자체처리 또는 업체명"></div>
+      <div class="section-divider">조치 내역</div>
+      <div class="mform-grid g3">
+        <div class="mfield"><label>사용 부품</label><input type="text" id="ev-parts" placeholder="없음"></div>
+        <div class="mfield"><label>외주 업체</label><input type="text" id="ev-vendor" placeholder="자체 정비"></div>
+        <div class="mfield"><label>소요 비용 (원)</label><input type="number" id="ev-cost" value="0"></div>
       </div>
-      <div class="mfield" style="margin-bottom:4px"><label>조치 상세</label><textarea id="ev-action" rows="3" placeholder="수행한 작업 내용"></textarea></div>
-      <div class="section-divider">결과 및 후속 조치</div>
-      <div class="mform-grid g2" style="margin-bottom:10px">
-        <div class="mfield"><label>작업 결과</label><select id="ev-result"><option>정상 복구</option><option>부분 복구</option><option>임시 조치</option><option>모니터링 중</option><option>추가 작업 필요</option></select></div>
-        <div class="mfield"><label>비용 (원)</label><input type="number" id="ev-cost" placeholder="0"></div>
+      <div class="mfield" style="margin-top:10px;margin-bottom:10px"><label>조치 내용</label><input type="text" id="ev-action" placeholder="조치 결과 기술"></div>
+      <div class="mform-grid g2">
+        <div class="mfield"><label>조치 결과</label><select id="ev-result"><option>완료</option><option>임시조치</option><option>관찰요망</option><option>미해결</option></select></div>
+        <div class="mfield"><label>후속 조치 사항</label><input type="text" id="ev-followup" placeholder="추후 관찰 일정 등"></div>
       </div>
-      <div class="mfield"><label>후속 조치 / 특이사항</label><textarea id="ev-followup" rows="2" placeholder="다음 점검 권고 등"></textarea></div>
     </div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeModal('evModal')">취소</button><button class="btn-primary" onclick="saveEv()">저장</button></div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('evModal')">취소</button>
+      <button class="btn-primary" onclick="saveEv()">저장</button>
+    </div>
   </div>
 </div>
-<div class="modal-overlay" id="equipEditModal">
-  <div class="modal modal-sm">
-    <div class="modal-head"><h3>장비 정보 수정</h3><button class="modal-close" onclick="closeModal('equipEditModal')">✕</button></div>
-    <div class="modal-body"><div class="mform-grid" style="gap:12px">
-      <div class="mfield"><label>장비명</label><input type="text" id="eq-name"></div>
-      <div class="mfield"><label>모델명</label><input type="text" id="eq-model"></div>
-      <div class="mfield"><label>도입연월</label><input type="text" id="eq-inst" placeholder="2020-03"></div>
-    </div></div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeModal('equipEditModal')">취소</button><button class="btn-primary" onclick="saveEquipEdit()">저장</button></div>
-  </div>
-</div>
-<div class="modal-overlay" id="histEditModal">
-  <div class="modal modal-sm">
-    <div class="modal-head"><h3>점검 이력 수정</h3><button class="modal-close" onclick="closeModal('histEditModal')">✕</button></div>
-    <div class="modal-body"><div class="mform-grid g2" style="gap:12px">
-      <div class="mfield"><label>날짜</label><input type="date" id="he-date"></div>
-      <div class="mfield"><label>점검자</label><input type="text" id="he-name"></div>
-      <div class="mfield"><label>점검 시간</label><input type="text" id="he-time"></div>
-      <div class="mfield"><label>상태</label><select id="he-status"><option value="ok">정상 완료</option><option value="warn">미완료</option><option value="err">오류 있음</option></select></div>
-    </div></div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeModal('histEditModal')">취소</button><button class="btn-primary" onclick="saveHistEdit()">저장</button></div>
-  </div>
-</div>
-<div class="modal-overlay" id="thEditModal">
-  <div class="modal modal-sm">
-    <div class="modal-head"><h3>온습도 기록 수정</h3><button class="modal-close" onclick="closeModal('thEditModal')">✕</button></div>
-    <div class="modal-body"><div class="mform-grid g2" style="gap:12px">
-      <div class="mfield"><label>날짜</label><input type="date" id="te-date"></div>
-      <div class="mfield"><label>시간</label><input type="text" id="te-time"></div>
-      <div class="mfield"><label>지역</label><input type="text" id="te-label" readonly style="background:var(--bg);color:var(--muted)"></div>
-      <div class="mfield"><label>점검자</label><input type="text" id="te-name"></div>
-      <div class="mfield"><label>온도 (°C)</label><input type="number" step="0.1" id="te-temp"></div>
-      <div class="mfield"><label>습도 (%)</label><input type="number" step="0.1" id="te-hum"></div>
-    </div></div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeModal('thEditModal')">취소</button><button class="btn-primary" onclick="saveThEdit()">저장</button></div>
-  </div>
-</div>
+
 <div class="modal-overlay" id="confirmModal">
   <div class="modal modal-sm">
-    <div class="modal-head"><h3>삭제 확인</h3><button class="modal-close" onclick="closeModal('confirmModal')">✕</button></div>
-    <div class="modal-body"><p class="confirm-msg" id="confirm-msg"></p><p class="confirm-sub">삭제된 데이터는 복구할 수 없습니다.</p></div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeModal('confirmModal')">취소</button><button class="btn-primary" style="background:var(--err)" id="confirm-ok">삭제</button></div>
+    <div class="modal-head"><h3>이력 삭제 확인</h3><button class="modal-close" onclick="closeModal('confirmModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="confirm-msg" id="confirm-msg-text">이 항목을 정말 삭제하시겠습니까?</div>
+      <div class="confirm-sub">삭제된 데이터는 복구할 수 없습니다.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('confirmModal')">취소</button>
+      <button class="btn-primary" id="confirm-ok-btn">삭제</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingModal">
+  <div class="modal modal-sm">
+    <div class="modal-head"><h3>시스템 설정</h3><button class="modal-close" onclick="closeModal('settingModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mfield"><label>Google Apps Script Web App URL</label><input type="text" id="setting-url" style="font-family:monospace;font-size:11px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('settingModal')">취소</button>
+      <button class="btn-primary" onclick="saveSetting()">적용</button>
+    </div>
   </div>
 </div>
 
 <div class="shell">
-  <aside class="sidebar">
-    <div class="brand"><div class="brand-logo">kt 알파쇼핑</div><div class="brand-sub">방송인프라 일일점검</div></div>
-    <div class="nav-section">
-      <div class="nav-label">점검</div>
-      <div class="nav-item active" onclick="goPage('today',this)"><span class="ico">☑</span>오늘 점검</div>
-      <div class="nav-item" onclick="goPage('th',this)"><span class="ico">🌡</span>온습도 입력</div>
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">KT알화쇼핑</div>
+      <div class="brand-sub">방송인프라 일일점검시스템</div>
     </div>
     <div class="nav-section">
-      <div class="nav-label">이력 · 분석</div>
-      <div class="nav-item" onclick="goPage('hist',this)"><span class="ico">📋</span>점검 이력</div>
-      <div class="nav-item" onclick="goPage('trend',this)"><span class="ico">📈</span>온습도 추이</div>
-      <div class="nav-item" onclick="goPage('equip',this)"><span class="ico">🔧</span>장비 수리이력</div>
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" onclick="switchPage('chk')" id="mi-chk"><span class="ico">📋</span>일일 정기 점검</div>
+      <div class="nav-item" onclick="switchPage('equip')" id="mi-equip"><span class="ico">⚙️</span>방송 장비 관리</div>
+      <div class="nav-item" onclick="switchPage('dash')" id="mi-dash"><span class="ico">📊</span>통계 대시보드</div>
     </div>
-    <div class="nav-footer" id="sidebar-date"></div>
-  </aside>
+    <div class="nav-footer">
+      <div>KT alpha Infrastructure</div>
+      <div style="font-size:9px;opacity:0.6;margin-top:2px">v2.0 (분산 DB 연동형)</div>
+    </div>
+  </div>
+  
   <div class="main">
-    <header class="topbar">
-      <div class="page-title" id="topbar-title">오늘 점검</div>
-      <div class="topbar-right" id="topbar-right"></div>
-    </header>
+    <div class="topbar">
+      <div class="page-title" id="bar-title">일일 정기 점검 기록</div>
+      <div class="topbar-right">
+        <span class="chip chip-ok" id="bar-status">시스템 연동 정상</span>
+      </div>
+    </div>
+    
     <div class="content">
-      <div class="data-bar loading" id="data-bar">
-        <span class="db-dot dot-b" id="db-dot"></span>
-        <span class="db-msg" id="db-msg">Google Sheets 연결 중...</span>
+      <div class="data-bar ok" id="db-bar">
+        <div class="db-dot dot-g" id="db-dot"></div>
+        <div class="db-msg" id="db-msg">분산 테이블 연동 모드가 활성화되어 있습니다. 데이터가 실시간으로 안전하게 행 분할 보관됩니다.</div>
         <div class="db-btns">
-          <button class="btn-db-save" id="btn-save" onclick="saveToSheets()" disabled>💾 저장</button>
-          <button class="btn-db-reload" onclick="loadFromSheets()">↺ 새로고침</button>
-          <button class="btn-db-setting" onclick="changeUrl()">⚙ URL 변경</button>
+          <button class="btn-db-reload" onclick="reloadData()">새로고침</button>
+          <button class="btn-db-setting" onclick="openSetting()">⚙️</button>
         </div>
       </div>
-
-      <div id="page-today" class="page on">
-        <div class="form-grid grid-3">
-          <div class="field"><label>날짜</label><input type="date" id="c-date"></div>
-          <div class="field"><label>담당자</label><input type="text" id="c-name" placeholder="이름 입력"></div>
-          <div class="field"><label>점검 시간</label><input type="text" id="c-time" placeholder="09:00~10:00"></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-card"><div class="num num-default" id="s-tot">20</div><div class="lbl">전체 항목</div></div>
-          <div class="stat-card"><div class="num num-ok" id="s-ok">0</div><div class="lbl">정상 완료</div></div>
-          <div class="stat-card"><div class="num num-err" id="s-err">0</div><div class="lbl">오류 발견</div></div>
-          <div class="stat-card"><div class="num num-warn" id="s-pend">20</div><div class="lbl">미점검</div></div>
-        </div>
-        <div class="prog-wrap">
-          <div class="prog-header"><span class="prog-label" id="prog-txt">점검을 시작해 주세요</span><span class="prog-pct" id="prog-pct">0%</span></div>
-          <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
-        </div>
-        <div id="chk-body"></div>
-        <div class="btn-row"><button class="btn-ghost" onclick="resetChk()">초기화</button><button class="btn-primary" onclick="saveChk()">점검 완료 저장</button></div>
-      </div>
-
-      <div id="page-th" class="page">
-        <div class="form-grid grid-3">
-          <div class="field"><label>날짜</label><input type="date" id="th-date"></div>
-          <div class="field"><label>점검자</label><input type="text" id="th-name" placeholder="이름 입력"></div>
-          <div class="field"><label>점검 시간</label><input type="text" id="th-time"></div>
-        </div>
-        <div class="notice">⚠ 기준값: 온도 22°C ± 2 / 습도 45% ± 10</div>
-        <div class="zone-grid" id="zone-grid"></div>
-        <div class="btn-row"><button class="btn-ghost" onclick="clearTH()">초기화</button><button class="btn-primary" onclick="saveTH()">저장</button></div>
-      </div>
-
-      <div id="page-hist" class="page">
-        <div class="flt-row">
-          <label>기간</label><input type="date" id="h-from"><span style="color:var(--muted)">~</span><input type="date" id="h-to">
-          <label style="display:flex;align-items:center;gap:4px"><input type="checkbox" id="h-warn"> 오류만</label>
-          <button class="btn-ghost btn-sm" onclick="renderHist()">조회</button>
-        </div>
-        <div class="card"><div class="table-wrap">
-          <table><thead><tr><th>날짜</th><th>점검자</th><th>시간</th><th>정상</th><th>오류</th><th>미점검</th><th>상태</th><th style="text-align:center">관리</th></tr></thead>
-          <tbody id="h-body"></tbody></table>
-        </div></div>
-      </div>
-
-      <div id="page-trend" class="page">
-        <div class="flt-row">
-          <label>지역</label><select id="tr-zone"></select>
-          <label>기간</label><select id="tr-days"><option value="7">최근 7일</option><option value="14">최근 14일</option><option value="30" selected>최근 30일</option></select>
-          <button class="btn-ghost btn-sm" onclick="renderTrend()">조회</button>
-        </div>
+      
+      <div class="page on" id="p-chk">
         <div class="card">
-          <div class="legend-row">
-            <div class="leg"><div class="leg-sq" style="background:#D0021B"></div>온도 (°C)</div>
-            <div class="leg"><div class="leg-sq" style="background:#1D6FA4"></div>습도 (%)</div>
+          <div class="form-grid grid-3">
+            <div class="field"><label>점검 일자</label><input type="date" id="chk-date"></div>
+            <div class="field"><label>점검 번차</label><select id="chk-shift"><option>주간 (09:00~18:00)</option><option>야간 (18:00~09:00)</option></select></div>
+            <div class="field"><label>책임 점검자</label><input type="text" id="chk-worker" placeholder="이름 입력"></div>
           </div>
-          <div class="chart-wrap"><canvas id="tr-chart"></canvas></div>
         </div>
-        <div class="divider"></div>
-        <div class="section-label">지역별 최근 7일 평균</div>
-        <div class="avg-grid" id="zone-avg" style="margin-bottom:18px"></div>
-        <div class="divider"></div>
-        <div class="section-label">온습도 전체 기록</div>
-        <div class="flt-row" style="margin-top:8px">
-          <label>지역</label><select id="tlog-zone"><option value="">전체</option></select>
-          <label><input type="checkbox" id="tlog-warn" onchange="renderThLog()"> 이상만</label>
-          <button class="btn-ghost btn-sm" onclick="renderThLog()">조회</button>
+        
+        <div class="zone-grid">
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-A"></span>A Studio 환경</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="22.5" id="th-A-t" oninput="valTH('A')"></div>
+              <div><label>습도 (%)</label><input type="text" value="45" id="th-A-h" oninput="valTH('A')"></div>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-B"></span>B Studio 환경</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="23.1" id="th-B-t" oninput="valTH('B')"></div>
+              <div><label>습도 (%)</label><input type="text" value="42" id="th-B-h" oninput="valTH('B')"></div>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-M"></span>조정실 주 장비실</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="21.8" id="th-M-t" oninput="valTH('M')"></div>
+              <div><label>습도 (%)</label><input type="text" value="48" id="th-M-h" oninput="valTH('M')"></div>
+            </div>
+          </div>
         </div>
-        <div class="card"><div class="table-wrap">
-          <table><thead><tr><th>날짜</th><th>시간</th><th>지역</th><th>온도</th><th>습도</th><th>점검자</th><th>상태</th><th style="text-align:center">관리</th></tr></thead>
-          <tbody id="th-log"></tbody></table>
-        </div></div>
+        
+        <div class="card" style="padding:10px 14px 14px">
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">전체 항목 점검 진척도</span><span class="prog-pct" id="p-pct">0%</span></div>
+            <div class="prog-track"><div class="prog-bar" id="p-bar" style="width:0%"></div></div>
+          </div>
+          <div id="chk-container"></div>
+          <div class="btn-row" style="margin-top:14px">
+            <button class="btn-primary" onclick="submitDailyCheck()">일일 점검 최종 제출 (구글시트 추가)</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="p-equip">
+        <div class="equip-layout">
+          <div class="equip-list" id="eq-list-box"></div>
+          <div class="equip-panel" id="eq-panel-box">
+            <div class="panel-empty">
+              <span class="icon">⚙️</span>
+              <span>좌측 리스트에서 조회할 방송 장비를 선택해 주세요.</span>
+              <span style="font-size:11px; opacity:0.7;">선택한 장비의 수리/교체 이력 행(Row)만 가볍게 실시간 필터 로드합니다.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="p-dash">
+        <div class="stat-row">
+          <div class="stat-card"><div class="num num-default" id="st-total">0</div><div class="lbl">총 관리 장비 수</div></div>
+          <div class="stat-card"><div class="num num-ok" id="st-active">0</div><div class="lbl">정상 운용 장비</div></div>
+          <div class="stat-card"><div class="num num-warn" id="st-warn">0</div><div class="lbl">주의/관찰 대상</div></div>
+          <div class="stat-card"><div class="num num-err" id="st-repair">0</div><div class="lbl">당월 누적 정비 수</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px">
+          <div class="card">
+            <div class="section-label">최근 7일간 정비 유형 분포 및 비용 추이</div>
+            <div class="chart-wrap"><canvas id="dashChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="section-label">종합 온습도 평균 모니터링</div>
+            <div class="avg-grid" style="margin-bottom:14px">
+              <div class="avg-card"><div class="az">A 스튜디오</div><div class="at" id="av-at">-</div><div class="ah" id="av-ah">-</div></div>
+              <div class="avg-card"><div class="az">B 스튜디오</div><div class="at" id="av-bt">-</div><div class="ah" id="av-bh">-</div></div>
+              <div class="avg-card"><div class="az">주 조정실</div><div class="at" id="av-mt">-</div><div class="ah" id="av-mh">-</div></div>
+            </div>
+            <div class="section-label">종합 인프라 가동 통계</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>구분</th><th>점검수</th><th>이상발견</th><th>가동률</th></tr></thead>
+                <tbody>
+                  <tr><td>전력 유닛</td><td>12회</td><td>0건</td><td>100%</td></tr>
+                  <tr><td>시스템 공조</td><td>12회</td><td>1건</td><td>91.6%</td></tr>
+                  <tr><td>소방/보안</td><td>12회</td><td>0건</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div id="page-equip" class="page">
-        <div class="equip-layout">
-          <div class="equip-list">
-            <div class="equip-list-head">
-              <span class="equip-list-title">장비 목록</span>
-              <button class="btn-ghost btn-sm" onclick="addEquip()">+ 추가</button>
-            </div>
-            <div id="equip-list-body"></div>
-          </div>
-          <div class="equip-panel">
-            <div class="panel-empty" id="panel-empty"><div class="icon">🔧</div><div>좌측에서 장비를 선택하세요</div></div>
-            <div id="panel-content" style="display:none;flex:1;flex-direction:column">
-              <div class="panel-head">
-                <div><div class="panel-equip-name" id="panel-name"></div><div class="panel-equip-meta" id="panel-meta"></div></div>
-                <div class="panel-head-actions">
-                  <button class="btn-ghost btn-sm" onclick="openEquipEdit(selectedEquipIdx)">✏ 수정</button>
-                  <button class="btn-ghost btn-sm" style="color:var(--err);border-color:var(--err)" onclick="deleteEquip(selectedEquipIdx)">🗑 삭제</button>
-                  <button class="btn-primary btn-sm" onclick="openEvModal(selectedEquipIdx)">+ 이력 추가</button>
-                </div>
-              </div>
-              <div class="panel-body"><div class="timeline" id="panel-timeline"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
-// Apps Script URL — 새 배포 후 여기 URL을 교체하세요
-// ══════════════════════════════════════════════════════
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyv5TfApIVyy99bsjVxydVrfTXye3vR7SCAxpNTC6wtpOrXfkiGBp3q0Nl6rqKfsR3L/exec';
+// 글로벌 변수 및 설정 마스터
+var GAS_URL = localStorage.getItem('kt_alpha_gas_url') || "";
+var currentPage = 'chk';
+var today = new Date().toISOString().split('T')[0];
 
-var CHK=[
-  {cat:'전기/공조 시설',cls:'cat-elec',items:['DESK and RACK PDU 상태 이상 유무 확인 (ALL 조정실)','기계실 본전반 상태 이상유무 확인 (5층, 6층 기계실 본전반)','항온항습기 동작상태 및 압력계, 온도계 이상유무 확인','Main/Back up UPS 작동모드, 출력상태, 배터리 상태 확인','UPS실 에어컨 및 배수 펌프 이상 유무 확인','대기실 지원시설 설정 확인 (5F SH 대기실 룰 현황판 등)']},
-  {cat:'시스템',cls:'cat-sys',items:['플랫폼 리턴 신호 및 코덱장비 이상유무 확인 및 F/S 동작 및 로그키어 송출상태 확인','GPS CLOCK and SYNC, AUTO CHANGEOVER 동작 및 세팅상태 확인','MODULAR SYSTEM 알람 발생여부 확인 (FRAME ALARM and NMS)','K2 Storage and AFS Storage 알람 발생여부 확인','VIDEO SERVER SYSTEM 알람발생여부 확인 (FRAME, FTP, STORAGE, TAKER, CMS)','각 서버 디스크 오류 유관 점검','SCHEDULE PC 당일 업로드 확인','TALLY, INTERCOM, ROUTER 및 기타 장비 ALARM INDICATOR 확인','LOUDNESS SYSTEM 알람 발생여부 확인','ALL SYSTEM 파손 및 보완, 보수사항 확인']},
-  {cat:'산업안전 (자율점검)',cls:'cat-safe',items:['조명, 전기 이상 여부 (조명기 고정상태, 전기설비 접지 상태 등)','난간 위험 및 낙상 위험 확인','비인가 전열기 사용 확인','바닥 미끄럼 위해 요소 및 스튜디오 파손 여부 확인']}
+// 로컬 마스터 데이터 스키마 (Equipments 마스터 테이블 역할)
+var equipData = [
+  {id:"EQ-001", name:"A스튜디오 메인 카메라", model:"Sony HDC-4300", loc:"A Studio", date:"2021-03", status:"정상"},
+  {id:"EQ-002", name:"B스튜디오 서브 카메라", model:"Sony HDC-3100", loc:"B Studio", date:"2022-05", status:"정상"},
+  {id:"EQ-003", name:"메인 자막기 (Character Gen)", model:"Compix Linx7000", loc:"Master Control", date:"2020-11", status:"관찰요망"},
+  {id:"EQ-004", name:"A스튜디오 비디오 스위처", model:"Sony XVS-G1", loc:"A Studio", date:"2023-01", status:"정상"},
+  {id:"EQ-005", name:"대형 월 모니터 디스플레이", model:"Samsung VideoWall", loc:"B Studio", date:"2019-08", status:"정상"},
+  {id:"EQ-006", name:"오디오 믹싱 콘솔", model:"Calrec Brio 36", loc:"Master Control", date:"2021-07", status:"정상"}
 ];
-var ZONES=[{key:'A_adj',label:'A 부조정실'},{key:'main',label:'주조정실'},{key:'comb',label:'통합기계실'},{key:'B_adj',label:'B 부조정실'},{key:'B_mech',label:'B 기계실'},{key:'ups',label:'UPS실'}];
-var T_STD=22,H_STD=45,T_TOL=2,H_TOL=10;
-var chkState={},chkRec=[],thRec=[],equipData=[];
-var tChart=null,selectedEquipIdx=-1,currentEvIdx=-1,currentSev='',editEquipIdx=-1,editHistIdx=-1,editThIdx=-1,openTlItems={};
 
-var now=new Date(),today=now.toISOString().slice(0,10);
-document.getElementById('sidebar-date').textContent=now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
-document.getElementById('c-date').value=today;
-document.getElementById('c-time').value='09:00~10:00';
-document.getElementById('th-date').value=today;
-document.getElementById('th-time').value=now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
-document.getElementById('ev-date').value=today;
-var m30=new Date();m30.setDate(m30.getDate()-30);
-document.getElementById('h-from').value=m30.toISOString().slice(0,10);
-document.getElementById('h-to').value=today;
+// 현재 화면에 선택된 단일 장비 및 해당 장비의 행 분산 로드 데이터 저장소
+var selectedEquipIdx = -1;
+var currentLoadedHistory = []; 
+var currentSev = 'low';
+var currentEvIdx = -1; // -1이면 신규 append, 0 이상이면 수정 행 타겟
+var chartInstance = null;
 
-// ── 상태바 ──────────────────────────────────────────
-function setBar(state,msg){
-  var bar=document.getElementById('data-bar');
-  var dot=document.getElementById('db-dot');
-  document.getElementById('db-msg').textContent=msg;
-  bar.className='data-bar '+state;
-  dot.className='db-dot '+(state==='ok'?'dot-g':state==='dirty'?'dot-y':state==='error'?'dot-r':'dot-b');
-  document.getElementById('btn-save').disabled=(state==='loading');
+// 일일 점검 고정 템플릿
+var chkItems = [
+  {id:1, cat:"전력", text:"UPS 입력 전압 정상 유무 (220V/380V ±10%) 상태 확인", sel:"OK", memo:""},
+  {id:2, cat:"전력", text:"바이패스 전원 공급 및 배전반 차단기 트립 외관 수시 점검", sel:"OK", memo:""},
+  {id:3, cat:"전력", text:"비상 발전기 연료 잔량(70% 이상) 및 수동 기동 전압 체크", sel:"OK", memo:""},
+  {id:4, cat:"시스템", text:"주조정실 레퍼런스 주클럭 마스터/슬레이브 동기화 위상 체크", sel:"OK", memo:""},
+  {id:5, cat:"시스템", text:"스위처 및 메인 라우터 크로스포인트 절체 테스트 상태 확인", sel:"OK", memo:""},
+  {id:6, cat:"시스템", text:"NAS 비디오 서버 스토리지 RAID 볼륨 데드볼륨 유무 모니터링", sel:"OK", memo:""},
+  {id:7, cat:"시스템", text:"송출 통합 오토메이션 인코딩 에러 및 스케줄러 덤프 확인", sel:"OK", memo:""},
+  {id:8, cat:"소방보안", text:"안전 관리 구역 소화설비 압력계 지침 정상 가이드 범위 확인", sel:"OK", memo:""},
+  {id:9, cat:"소방보안", text:"종합 통제 구역 인프라 도어락 및 데드볼트 연동 제어 상태", sel:"OK", memo:""}
+];
+
+window.onload = function() {
+  document.getElementById('chk-date').value = today;
+  document.getElementById('ev-date').value = today;
+  document.getElementById('setting-url').value = GAS_URL;
+  
+  if(!GAS_URL) {
+    setBarState('error', '경고: 구글 시트 API URL 설정이 비어 있습니다. 우측 ⚙️ 버튼을 눌러 연동 주소를 기입해 주세요.');
+  }
+  
+  initDailyCheckList();
+  renderEquipList();
+  updateStats();
+};
+
+// 동적 데이터바 상태 처리기
+function setBarState(state, msg) {
+  var bar = document.getElementById('db-bar');
+  var dot = document.getElementById('db-dot');
+  var msgBox = document.getElementById('db-msg');
+  
+  bar.className = "data-bar " + state;
+  dot.className = "db-dot " + (state==='ok'?'dot-g':state==='dirty'?'dot-y':state==='loading'?'dot-b':'dot-r');
+  msgBox.innerText = msg;
 }
-function markDirty(){setBar('dirty','⚠ 저장되지 않은 변경사항이 있습니다');}
 
-// ── URL 변경 ─────────────────────────────────────────
-function changeUrl(){
-  var u=prompt('Apps Script URL 입력',SCRIPT_URL);
-  if(u&&u.trim().startsWith('https://script.google.com')){
-    SCRIPT_URL=u.trim();
-    loadFromSheets();
+function openSetting() { document.getElementById('settingModal').classList.add('open'); }
+function saveSetting() {
+  var url = document.getElementById('setting-url').value.trim();
+  localStorage.setItem('kt_alpha_gas_url', url);
+  GAS_URL = url;
+  closeModal('settingModal');
+  if(url) {
+    setBarState('ok', '구글 시트 연동 주소가 저장되었습니다. 분산 처리가 가동됩니다.');
+  } else {
+    setBarState('error', 'URL이 유효하지 않습니다.');
   }
 }
 
-// ── Google Sheets 통신 (GET 방식) ────────────────────
-function loadFromSheets(){
-  setBar('loading','Google Sheets에서 데이터 불러오는 중...');
-  fetch(SCRIPT_URL+'?action=load', {redirect:'follow'})
-    .then(function(r){return r.json();})
-    .then(function(res){
-      if(!res.ok)throw new Error(res.error||'불러오기 실패');
-      var d=res.data||{};
-      chkRec   =Array.isArray(d.chkRec)    ?d.chkRec   :[];
-      thRec    =Array.isArray(d.thRec)     ?d.thRec    :[];
-      equipData=Array.isArray(d.equipData) ?d.equipData:[];
-      var t=d.saved?new Date(d.saved).toLocaleString('ko-KR'):'';
-      setBar('ok','✅ 연결됨 — 점검이력 '+chkRec.length+'건 / 온습도 '+thRec.length+'건'+(t?' · 마지막 저장: '+t:''));
-      renderEquipList();
-    }).catch(function(e){
-      setBar('error','❌ 연결 실패 — '+e.message);
-    });
+function switchPage(p) {
+  currentPage = p;
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('p-'+p).classList.add('on');
+  document.getElementById('mi-'+p).classList.add('active');
+  
+  if(p === 'chk') {
+    document.getElementById('bar-title').innerText = "일일 정기 점검 기록";
+  } else if(p === 'equip') {
+    document.getElementById('bar-title').innerText = "방송 인프라 장비 이력 분산 관리";
+    renderEquipList();
+  } else if(p === 'dash') {
+    document.getElementById('bar-title').innerText = "종합 데이터 분석 통계";
+    initDashboard();
+  }
 }
 
-function saveToSheets(){
-  setBar('loading','저장 중...');
-  var payload={chkRec:chkRec,thRec:thRec,equipData:equipData};
-  var encoded=encodeURIComponent(JSON.stringify(payload));
-  fetch(SCRIPT_URL+'?action=save&payload='+encoded, {redirect:'follow'})
-    .then(function(r){return r.json();})
-    .then(function(res){
-      if(!res.ok)throw new Error(res.error||'저장 실패');
-      var t=new Date(res.saved).toLocaleString('ko-KR');
-      setBar('ok','✅ 저장 완료 ('+t+') — 팀원 모두에게 즉시 반영됩니다');
-    }).catch(function(e){
-      // GET URL이 너무 길면 POST fallback
-      if(e.message.indexOf('414')>=0||encoded.length>7000){
-        savePost(payload);
-      } else {
-        setBar('error','❌ 저장 실패 — '+e.message);
-      }
-    });
-}
-
-function savePost(payload){
-  fetch(SCRIPT_URL,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({action:'save',payload:payload})
-  }).then(function(){
-    setTimeout(function(){
-      fetch(SCRIPT_URL+'?action=load')
-        .then(function(r){return r.json();})
-        .then(function(res){
-          var t=res.data&&res.data.saved?new Date(res.data.saved).toLocaleString('ko-KR'):'';
-          setBar('ok','✅ 저장 완료'+(t?' ('+t+')':''));
-        }).catch(function(){setBar('ok','✅ 저장 완료');});
-    },2000);
-  }).catch(function(e){setBar('error','❌ 저장 실패 — '+e.message);});
-}
-
-// ── 페이지 ───────────────────────────────────────────
-function goPage(name,el){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  document.getElementById('page-'+name).classList.add('on');
-  if(el)el.classList.add('active');
-  var titles={today:'오늘 점검',th:'온습도 입력',hist:'점검 이력',trend:'온습도 추이',equip:'장비 수리이력'};
-  document.getElementById('topbar-title').textContent=titles[name]||'';
-  if(name==='hist')renderHist();
-  if(name==='trend'){buildTrZone();buildTlogZone();renderTrend();renderThLog();}
-  if(name==='equip')renderEquipList();
-}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function confirm2(msg,fn){document.getElementById('confirm-msg').textContent=msg;document.getElementById('confirm-ok').onclick=function(){fn();closeModal('confirmModal');};document.getElementById('confirmModal').classList.add('open');}
-
-// ① 점검
-function buildChk(){
-  var html='';
-  CHK.forEach(function(sec,si){
-    html+='<div class="cat-block"><div class="cat-header '+sec.cls+'">'+sec.cat+'</div>';
-    sec.items.forEach(function(item,ii){
-      var id='c'+si+'_'+ii;
-      if(!chkState[id])chkState[id]={done:false,status:'정상',note:'',showNote:false};
-      var s=chkState[id],cls='chk-item'+(s.done?(s.status==='오류'?' has-error':' checked'):'');
-      html+='<div class="'+cls+'" id="ci_'+id+'">'
-        +'<input type="checkbox" class="chk-cb" '+(s.done?'checked':'')+' onchange="togChk(\''+id+'\',this.checked)">'
-        +'<span class="chk-text">'+item+'</span>'
-        +'<select class="chk-sel" onchange="setStatus(\''+id+'\',this.value)">'
-        +'<option'+(s.status==='정상'?' selected':'')+'>정상</option>'
-        +'<option'+(s.status==='오류'?' selected':'')+'>오류</option>'
-        +'<option'+(s.status==='해당없음'?' selected':'')+'>해당없음</option>'
-        +'</select><button class="memo-btn" onclick="togNote(\''+id+'\')">메모</button></div>'
-        +'<div class="memo-area" id="na_'+id+'" style="display:'+(s.showNote?'block':'none')+'">'
-        +'<textarea placeholder="비고..." onchange="setNote(\''+id+'\',this.value)">'+s.note+'</textarea></div>';
-    });html+='</div>';
-  });
-  document.getElementById('chk-body').innerHTML=html;updStats();
-}
-function togChk(id,v){chkState[id].done=v;document.getElementById('ci_'+id).className='chk-item'+(v?(chkState[id].status==='오류'?' has-error':' checked'):'');updStats();}
-function setStatus(id,v){chkState[id].status=v;if(chkState[id].done)document.getElementById('ci_'+id).className='chk-item'+(v==='오류'?' has-error':' checked');updStats();}
-function setNote(id,v){chkState[id].note=v;}
-function togNote(id){chkState[id].showNote=!chkState[id].showNote;document.getElementById('na_'+id).style.display=chkState[id].showNote?'block':'none';}
-function updStats(){
-  var keys=Object.keys(chkState),tot=keys.length,ok=0,err=0,pend=0;
-  keys.forEach(function(k){var s=chkState[k];if(!s.done)pend++;else if(s.status==='오류')err++;else ok++;});
-  document.getElementById('s-tot').textContent=tot;document.getElementById('s-ok').textContent=ok;
-  document.getElementById('s-err').textContent=err;document.getElementById('s-pend').textContent=pend;
-  var pct=Math.round((tot-pend)/tot*100);
-  document.getElementById('prog-bar').style.width=pct+'%';document.getElementById('prog-pct').textContent=pct+'%';
-  document.getElementById('prog-txt').textContent=pct===100?'✓ 모든 항목 점검 완료':'진행중 — 미점검 '+pend+'항목';
-  document.getElementById('topbar-right').innerHTML=err>0?'<span class="chip chip-err">오류 '+err+'건</span>':pend>0?'<span class="chip chip-warn">미점검 '+pend+'</span>':pct===100?'<span class="chip chip-ok">완료</span>':'';
-}
-function resetChk(){if(!confirm('초기화하시겠습니까?'))return;chkState={};buildChk();}
-function saveChk(){
-  var date=document.getElementById('c-date').value,name=document.getElementById('c-name').value||'미입력',time=document.getElementById('c-time').value;
-  if(!date){alert('날짜를 선택해 주세요.');return;}
-  var keys=Object.keys(chkState),ok=0,err=0,pend=0;
-  keys.forEach(function(k){var s=chkState[k];if(!s.done)pend++;else if(s.status==='오류')err++;else ok++;});
-  chkRec.unshift({date:date,time:time,name:name,ok:ok,err:err,pend:pend,total:keys.length});
-  if(chkRec.length>90)chkRec=chkRec.slice(0,90);
-  saveToSheets();
-}
-
-// ② 온습도
-function buildZoneGrid(){
-  document.getElementById('zone-grid').innerHTML=ZONES.map(function(z){
-    return '<div class="zone-card"><div class="zone-title"><span class="zdot" id="dot_'+z.key+'"></span>'+z.label+'</div>'
-      +'<div class="zone-inputs"><div><label>온도 (°C)</label><input type="number" step="0.1" id="zt_'+z.key+'" placeholder="22.0" oninput="chkZone(\''+z.key+'\')"></div>'
-      +'<div><label>습도 (%)</label><input type="number" step="0.1" id="zh_'+z.key+'" placeholder="45.0" oninput="chkZone(\''+z.key+'\')"></div></div></div>';
-  }).join('');
-}
-function chkZone(key){
-  var te=document.getElementById('zt_'+key),he=document.getElementById('zh_'+key);
-  var t=parseFloat(te.value),h=parseFloat(he.value);
-  te.className=(!isNaN(t)&&Math.abs(t-T_STD)>T_TOL)?'bad':'';
-  he.className=(!isNaN(h)&&Math.abs(h-H_STD)>H_TOL)?'bad':'';
-  var dot=document.getElementById('dot_'+key);
-  if(isNaN(t)&&isNaN(h)){dot.className='zdot';return;}
-  dot.className='zdot '+(( (!isNaN(t)&&Math.abs(t-T_STD)>T_TOL)||(!isNaN(h)&&Math.abs(h-H_STD)>H_TOL) )?'warn':'ok');
-}
-function clearTH(){ZONES.forEach(function(z){document.getElementById('zt_'+z.key).value='';document.getElementById('zh_'+z.key).value='';document.getElementById('dot_'+z.key).className='zdot';});}
-function saveTH(){
-  var date=document.getElementById('th-date').value,name=document.getElementById('th-name').value||'미입력',time=document.getElementById('th-time').value;
-  if(!date){alert('날짜를 선택해 주세요.');return;}
-  var cnt=0;
-  ZONES.forEach(function(z){
-    var tv=document.getElementById('zt_'+z.key).value,hv=document.getElementById('zh_'+z.key).value;
-    if(tv===''&&hv==='')return;
-    var t=parseFloat(tv),h=parseFloat(hv);
-    thRec.push({date:date,time:time,name:name,zone:z.key,label:z.label,
-      temp:isNaN(t)?null:parseFloat(t.toFixed(1)),hum:isNaN(h)?null:parseFloat(h.toFixed(1)),
-      warn:(!isNaN(t)&&Math.abs(t-T_STD)>T_TOL)||(!isNaN(h)&&Math.abs(h-H_STD)>H_TOL)});cnt++;
-  });
-  if(!cnt){alert('입력된 값이 없습니다.');return;}
-  thRec.sort(function(a,b){return a.date.localeCompare(b.date);});
-  if(thRec.length>600)thRec=thRec.slice(-600);
-  saveToSheets();clearTH();
-}
-
-// ③ 점검 이력
-function renderHist(){
-  var from=document.getElementById('h-from').value,to=document.getElementById('h-to').value,warnOnly=document.getElementById('h-warn').checked;
-  var data=chkRec.map(function(r,i){return{r:r,i:i};}).filter(function(x){return(!from||x.r.date>=from)&&(!to||x.r.date<=to)&&(!warnOnly||x.r.err>0);});
-  var body=document.getElementById('h-body');
-  if(!data.length){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">저장된 기록이 없습니다</td></tr>';return;}
-  body.innerHTML=data.map(function(x){
-    var r=x.r,i=x.i,bc=r.err>0?'b-err':r.pend>0?'b-warn':'b-ok',bl=r.err>0?'오류 '+r.err+'건':r.pend>0?'미완료':'정상 완료';
-    return '<tr><td>'+r.date+'</td><td>'+r.name+'</td><td style="color:var(--muted)">'+r.time+'</td>'
-      +'<td><strong style="color:var(--ok)">'+r.ok+'</strong></td><td><strong style="color:var(--err)">'+r.err+'</strong></td>'
-      +'<td style="color:var(--warn)">'+r.pend+'</td><td><span class="badge '+bc+'">'+bl+'</span></td>'
-      +'<td style="text-align:center;white-space:nowrap">'
-      +'<button class="btn-icon edit" onclick="openHistEdit('+i+')">✏</button> '
-      +'<button class="btn-icon del" onclick="deleteHist('+i+')">🗑</button></td></tr>';
-  }).join('');
-}
-function openHistEdit(i){
-  editHistIdx=i;var r=chkRec[i];
-  document.getElementById('he-date').value=r.date;document.getElementById('he-name').value=r.name;
-  document.getElementById('he-time').value=r.time||'';
-  document.getElementById('he-status').value=r.err>0?'err':r.pend>0?'warn':'ok';
-  document.getElementById('histEditModal').classList.add('open');
-}
-function saveHistEdit(){
-  if(editHistIdx<0)return;var r=chkRec[editHistIdx];
-  r.date=document.getElementById('he-date').value;r.name=document.getElementById('he-name').value;r.time=document.getElementById('he-time').value;
-  var st=document.getElementById('he-status').value;
-  if(st==='ok'){r.err=0;r.pend=0;}else if(st==='warn'){r.pend=Math.max(r.pend,1);}else{r.err=Math.max(r.err,1);}
-  closeModal('histEditModal');renderHist();markDirty();
-}
-function deleteHist(i){confirm2('점검이력 ['+chkRec[i].date+'] 을 삭제하시겠습니까?',function(){chkRec.splice(i,1);renderHist();markDirty();});}
-
-// ④ 온습도 추이
-var avg=function(arr){return arr.length?parseFloat((arr.reduce(function(a,b){return a+b;},0)/arr.length).toFixed(1)):null;};
-function buildTrZone(){var sel=document.getElementById('tr-zone'),cur=sel.value;sel.innerHTML=ZONES.map(function(z){return '<option value="'+z.key+'">'+z.label+'</option>';}).join('');if(cur)sel.value=cur;}
-function buildTlogZone(){var sel=document.getElementById('tlog-zone'),cur=sel.value;sel.innerHTML='<option value="">전체</option>'+ZONES.map(function(z){return '<option value="'+z.key+'">'+z.label+'</option>';}).join('');if(cur)sel.value=cur;}
-function renderTrend(){
-  var zone=document.getElementById('tr-zone').value,days=parseInt(document.getElementById('tr-days').value);
-  var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);
-  var filtered=thRec.filter(function(r){return r.zone===zone&&r.date>=cutStr;}),dmap={};
-  filtered.forEach(function(r){if(!dmap[r.date])dmap[r.date]={t:[],h:[]};if(r.temp!==null)dmap[r.date].t.push(r.temp);if(r.hum!==null)dmap[r.date].h.push(r.hum);});
-  var labels=Object.keys(dmap).sort(),temps=labels.map(function(d){return avg(dmap[d].t);}),hums=labels.map(function(d){return avg(dmap[d].h);});
-  if(tChart){tChart.destroy();tChart=null;}
-  var ctx=document.getElementById('tr-chart').getContext('2d');
-  tChart=new Chart(ctx,{type:'line',data:{labels:labels.map(function(d){return d.slice(5);}),datasets:[
-    {label:'온도',data:temps,borderColor:'#D0021B',backgroundColor:'rgba(208,2,27,0.06)',pointBackgroundColor:'#D0021B',pointRadius:4,tension:.35,yAxisID:'yT',borderWidth:2.5},
-    {label:'습도',data:hums,borderColor:'#1D6FA4',backgroundColor:'rgba(29,111,164,0.06)',pointBackgroundColor:'#1D6FA4',pointRadius:4,tension:.35,borderDash:[5,3],yAxisID:'yH',borderWidth:2.5},
-    {label:'온도기준',data:labels.map(function(){return T_STD;}),borderColor:'rgba(208,2,27,0.25)',borderDash:[2,4],pointRadius:0,yAxisID:'yT',borderWidth:1},
-    {label:'습도기준',data:labels.map(function(){return H_STD;}),borderColor:'rgba(29,111,164,0.25)',borderDash:[2,4],pointRadius:0,yAxisID:'yH',borderWidth:1}
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},
-    scales:{x:{ticks:{font:{size:11},maxRotation:45},grid:{color:'rgba(0,0,0,0.05)'}},
-      yT:{type:'linear',position:'left',title:{display:true,text:'온도(°C)',font:{size:11}},ticks:{font:{size:11},callback:function(v){return v+'°C';}},grid:{color:'rgba(0,0,0,0.05)'}},
-      yH:{type:'linear',position:'right',title:{display:true,text:'습도(%)',font:{size:11}},ticks:{font:{size:11},callback:function(v){return v+'%';}},grid:{drawOnChartArea:false}}}}});
-  var cut7=new Date();cut7.setDate(cut7.getDate()-7);var c7str=cut7.toISOString().slice(0,10);
-  document.getElementById('zone-avg').innerHTML=ZONES.map(function(z){
-    var zr=thRec.filter(function(r){return r.zone===z.key&&r.date>=c7str;});
-    var at=avg(zr.filter(function(r){return r.temp!==null;}).map(function(r){return r.temp;}));
-    var ah=avg(zr.filter(function(r){return r.hum!==null;}).map(function(r){return r.hum;}));
-    var tw=at!==null&&Math.abs(at-T_STD)>T_TOL,hw=ah!==null&&Math.abs(ah-H_STD)>H_TOL;
-    return '<div class="avg-card"><div class="az">'+z.label+'</div>'
-      +'<div class="at" style="color:'+(tw?'#DC2626':'#059669')+'">'+(at!==null?at+'°C':'—')+'</div>'
-      +'<div class="ah" style="color:'+(hw?'#DC2626':'#1D6FA4')+'">'+(ah!==null?ah+'%':'—')+'</div></div>';
-  }).join('');
-}
-function renderThLog(){
-  var zoneF=document.getElementById('tlog-zone').value,warnOnly=document.getElementById('tlog-warn').checked;
-  var data=thRec.map(function(r,i){return{r:r,i:i};}).filter(function(x){return(!zoneF||x.r.zone===zoneF)&&(!warnOnly||x.r.warn);}).slice().reverse();
-  var body=document.getElementById('th-log');
-  if(!data.length){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:18px;color:var(--muted)">기록 없음</td></tr>';return;}
-  body.innerHTML=data.map(function(x){
-    var r=x.r,i=x.i,tc=r.temp!==null&&Math.abs(r.temp-T_STD)>T_TOL,hc=r.hum!==null&&Math.abs(r.hum-H_STD)>H_TOL;
-    return '<tr><td>'+r.date+'</td><td style="color:var(--muted)">'+r.time+'</td><td>'+r.label+'</td>'
-      +'<td style="font-weight:700;color:'+(tc?'var(--err)':'var(--text)')+'">'+(r.temp!==null?r.temp+'°C':'—')+'</td>'
-      +'<td style="font-weight:700;color:'+(hc?'var(--err)':'var(--text)')+'">'+(r.hum!==null?r.hum+'%':'—')+'</td>'
-      +'<td style="color:var(--muted)">'+r.name+'</td>'
-      +'<td>'+(r.warn?'<span class="badge b-err">이상</span>':'<span class="badge b-ok">정상</span>')+'</td>'
-      +'<td style="text-align:center;white-space:nowrap">'
-      +'<button class="btn-icon edit" onclick="openThEdit('+i+')">✏</button> '
-      +'<button class="btn-icon del" onclick="deleteTh('+i+')">🗑</button></td></tr>';
-  }).join('');
-}
-function openThEdit(i){
-  editThIdx=i;var r=thRec[i];
-  document.getElementById('te-date').value=r.date;document.getElementById('te-time').value=r.time;
-  document.getElementById('te-label').value=r.label;document.getElementById('te-name').value=r.name;
-  document.getElementById('te-temp').value=r.temp!==null?r.temp:'';document.getElementById('te-hum').value=r.hum!==null?r.hum:'';
-  document.getElementById('thEditModal').classList.add('open');
-}
-function saveThEdit(){
-  if(editThIdx<0)return;var r=thRec[editThIdx];
-  r.date=document.getElementById('te-date').value;r.time=document.getElementById('te-time').value;r.name=document.getElementById('te-name').value;
-  var t=parseFloat(document.getElementById('te-temp').value),h=parseFloat(document.getElementById('te-hum').value);
-  r.temp=isNaN(t)?null:parseFloat(t.toFixed(1));r.hum=isNaN(h)?null:parseFloat(h.toFixed(1));
-  r.warn=(!isNaN(t)&&Math.abs(t-T_STD)>T_TOL)||(!isNaN(h)&&Math.abs(h-H_STD)>H_TOL);
-  thRec.sort(function(a,b){return a.date.localeCompare(b.date);});
-  closeModal('thEditModal');renderThLog();if(tChart)renderTrend();markDirty();
-}
-function deleteTh(i){confirm2('['+thRec[i].date+' / '+thRec[i].label+'] 삭제하시겠습니까?',function(){thRec.splice(i,1);renderThLog();if(tChart)renderTrend();markDirty();});}
-
-// ⑤ 장비 수리이력
-var SEV_LABEL={low:'낮음',mid:'보통',high:'높음'},SEV_DOT={low:'dot-low',mid:'dot-mid',high:'dot-high'},SEV_BADGE={low:'b-ok',mid:'b-warn',high:'b-err'};
-function renderEquipList(){
-  document.getElementById('equip-list-body').innerHTML=equipData.map(function(e,ei){
-    var lastEv=e.evs.length?e.evs[e.evs.length-1]:null,hasHigh=e.evs.some(function(ev){return ev.sev==='high';});
-    return '<div class="equip-list-item'+(selectedEquipIdx===ei?' active':'')+'" onclick="selectEquip('+ei+')">'
-      +'<div><div class="eli-name">'+e.name+'</div><div class="eli-sub">'+e.model+'</div></div>'
-      +'<div class="eli-right"><span class="badge '+(hasHigh?'b-err':'b-blue')+'">'+e.evs.length+'건</span>'
-      +(lastEv?'<span style="font-size:10px;color:var(--muted)">'+lastEv.date+'</span>':'')+'</div></div>';
-  }).join('');
-}
-function selectEquip(ei){
-  selectedEquipIdx=ei;renderEquipList();
-  var e=equipData[ei];
-  document.getElementById('panel-empty').style.display='none';
-  var pc=document.getElementById('panel-content');pc.style.display='flex';pc.style.flexDirection='column';
-  document.getElementById('panel-name').textContent=e.name;
-  document.getElementById('panel-meta').textContent=e.model+' · 도입 '+e.inst+' · 총 '+e.evs.length+'건';
-  renderTimeline(ei);
-}
-function renderTimeline(ei){
-  var e=equipData[ei],tl=document.getElementById('panel-timeline');
-  if(!e.evs.length){tl.innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">등록된 이력이 없습니다.<br><br><button class="btn-primary btn-sm" onclick="openEvModal('+ei+')">+ 첫 이력 추가</button></div>';return;}
-  tl.innerHTML=e.evs.slice().reverse().map(function(ev,rev_i){
-    var evi=e.evs.length-1-rev_i,isOpen=openTlItems[ei+'_'+evi];
-    var dotCls=SEV_DOT[ev.sev]||'dot-low',badgeCls=SEV_BADGE[ev.sev]||'b-ok';
-    var detail='';
-    if(isOpen){
-      var rows='';
-      if(ev.parts)rows+='<div class="detail-item"><div class="dl">부품</div><div class="dv">'+ev.parts+'</div></div>';
-      if(ev.vendor)rows+='<div class="detail-item"><div class="dl">업체</div><div class="dv">'+ev.vendor+'</div></div>';
-      if(ev.result)rows+='<div class="detail-item"><div class="dl">결과</div><div class="dv">'+ev.result+'</div></div>';
-      if(ev.cost&&ev.cost>0)rows+='<div class="detail-item"><div class="dl">비용</div><div class="dv">'+Number(ev.cost).toLocaleString()+'원</div></div>';
-      detail='<div class="tl-detail open">'
-        +(ev.desc?'<div class="detail-full"><div class="dl">발견 내용</div><div class="dv">'+ev.desc+'</div></div>':'')
-        +(rows?'<div class="detail-grid">'+rows+'</div>':'')
-        +(ev.action?'<div class="detail-full"><div class="dl">조치 상세</div><div class="dv">'+ev.action+'</div></div>':'')
-        +(ev.followup?'<div class="followup-box">📌 후속 조치: '+ev.followup+'</div>':'')
-        +'</div>';
+// --- 일일 점검 처리부 (탭 분할 누적 저장) ---
+function initDailyCheckList() {
+  var container = document.getElementById('chk-container');
+  container.innerHTML = "";
+  
+  var currentCat = "";
+  var block = null;
+  
+  chkItems.forEach((item, idx) => {
+    if(item.cat !== currentCat) {
+      currentCat = item.cat;
+      block = document.createElement('div');
+      block.className = "cat-block";
+      var lbl = currentCat === "전력" ? "⚡ 전력 공급 인프라 단원" : currentCat === "시스템" ? "🖥️ 방송 연동 시스템 단원" : "🛡️ 소방 및 재해 보안 시스템";
+      var cls = currentCat === "전력" ? "cat-elec" : currentCat === "시스템" ? "cat-sys" : "cat-safe";
+      block.innerHTML = `<div class="cat-header ${cls}">${lbl}</div>`;
+      container.appendChild(block);
     }
-    return '<div class="tl-item"><div class="tl-dot '+dotCls+'"></div>'
-      +'<div class="tl-card'+(isOpen?' open':'')+'" onclick="toggleTlItem('+ei+','+evi+')">'
-      +'<div class="tl-row"><span class="tl-date">'+ev.date+'</span>'
-      +'<span class="tl-title">'+(ev.symptom||ev.type)+'</span>'
-      +'<div class="tl-tags"><span class="badge b-blue">'+ev.type+'</span><span class="badge '+badgeCls+'">'+(SEV_LABEL[ev.sev]||'—')+'</span>'
-      +(ev.person?'<span style="font-size:11px;color:var(--muted)">'+ev.person+'</span>':'')+'</div>'
-      +'<div class="tl-actions" onclick="event.stopPropagation()">'
-      +'<button class="btn-icon edit" onclick="openEvEdit('+ei+','+evi+')">✏</button>'
-      +'<button class="btn-icon del" onclick="deleteEv('+ei+','+evi+')">🗑</button></div>'
-      +'<span class="tl-toggle'+(isOpen?' open':'')+'">▼</span></div>'
-      +detail+'</div></div>';
-  }).join('');
-}
-function toggleTlItem(ei,evi){var key=ei+'_'+evi;openTlItems[key]=!openTlItems[key];renderTimeline(ei);}
-function addEquip(){
-  var n=prompt('장비명');if(!n)return;
-  var m=prompt('모델명')||'';var inst=prompt('도입연월 (예: 2020-03)')||'';
-  equipData.push({name:n,model:m,inst:inst,evs:[]});renderEquipList();markDirty();
-}
-function openEquipEdit(ei){
-  editEquipIdx=ei;var e=equipData[ei];
-  document.getElementById('eq-name').value=e.name;document.getElementById('eq-model').value=e.model;document.getElementById('eq-inst').value=e.inst;
-  document.getElementById('equipEditModal').classList.add('open');
-}
-function saveEquipEdit(){
-  if(editEquipIdx<0)return;
-  equipData[editEquipIdx].name=document.getElementById('eq-name').value;
-  equipData[editEquipIdx].model=document.getElementById('eq-model').value;
-  equipData[editEquipIdx].inst=document.getElementById('eq-inst').value;
-  closeModal('equipEditModal');renderEquipList();if(selectedEquipIdx===editEquipIdx)selectEquip(editEquipIdx);markDirty();
-}
-function deleteEquip(ei){
-  confirm2('장비 ['+equipData[ei].name+'] 및 모든 이력을 삭제하시겠습니까?',function(){
-    equipData.splice(ei,1);selectedEquipIdx=-1;
-    document.getElementById('panel-empty').style.display='flex';document.getElementById('panel-content').style.display='none';
-    renderEquipList();markDirty();
+    
+    var div = document.createElement('div');
+    div.className = "chk-item checked";
+    div.id = "ci-" + idx;
+    div.innerHTML = `
+      <input type="checkbox" class="chk-cb" checked onchange="toggleCB(${idx})">
+      <div class="chk-text">${item.text}</div>
+      <select class="chk-sel" onchange="changeSel(${idx}, this.value)">
+        <option value="OK">정상(OK)</option>
+        <option value="WARN">요관찰(WARN)</option>
+        <option value="ERR">이상발견(ERR)</option>
+      </select>
+      <button class="memo-btn" onclick="toggleMemo(${idx})">📝 메모</button>
+      <div class="memo-area" id="ma-${idx}" style="display:none; width:100%;">
+        <textarea placeholder="특이사항 세부 내용을 입력하세요" oninput="changeMemo(${idx}, this.value)"></textarea>
+      </div>
+    `;
+    block.appendChild(div);
   });
+  calcProgress();
 }
-function setSev(s){currentSev=s;['low','mid','high'].forEach(function(x){document.getElementById('sev-'+x).className='sev-btn'+(x===s?' sel-'+x:'');});}
-function openEvModal(ei){
-  selectedEquipIdx=ei;currentEvIdx=-1;currentSev='low';
-  document.getElementById('modal-ev-title').textContent=equipData[ei].name+' — 이력 추가';
-  ['ev-person','ev-symptom','ev-desc','ev-parts','ev-action','ev-followup'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('ev-date').value=today;document.getElementById('ev-vendor').value='자체처리';
-  document.getElementById('ev-cost').value='';document.getElementById('ev-type').selectedIndex=0;document.getElementById('ev-result').selectedIndex=0;
-  ['low','mid','high'].forEach(function(s){document.getElementById('sev-'+s).className='sev-btn';});
-  document.getElementById('evModal').classList.add('open');
+
+function toggleCB(idx) {
+  var div = document.getElementById('ci-'+idx);
+  var cb = div.querySelector('.chk-cb');
+  if(cb.checked) {
+    div.classList.add('checked');
+    changeSel(idx, div.querySelector('.chk-sel').value);
+  } else {
+    div.classList.remove('checked', 'has-error');
+  }
+  calcProgress();
 }
-function openEvEdit(ei,evi){
-  selectedEquipIdx=ei;currentEvIdx=evi;var ev=equipData[ei].evs[evi];
-  document.getElementById('modal-ev-title').textContent=equipData[ei].name+' — 이력 수정';
-  document.getElementById('ev-date').value=ev.date||today;document.getElementById('ev-type').value=ev.type||'정기점검';
-  document.getElementById('ev-person').value=ev.person||'';document.getElementById('ev-symptom').value=ev.symptom||'';
-  document.getElementById('ev-desc').value=ev.desc||'';document.getElementById('ev-parts').value=ev.parts||'';
-  document.getElementById('ev-vendor').value=ev.vendor||'자체처리';document.getElementById('ev-action').value=ev.action||'';
-  document.getElementById('ev-result').value=ev.result||'정상 복구';document.getElementById('ev-cost').value=ev.cost||'';
-  document.getElementById('ev-followup').value=ev.followup||'';
-  currentSev=ev.sev||'low';
-  ['low','mid','high'].forEach(function(s){document.getElementById('sev-'+s).className='sev-btn'+(s===currentSev?' sel-'+s:'');});
-  document.getElementById('evModal').classList.add('open');
+
+function changeSel(idx, val) {
+  chkItems[idx].sel = val;
+  var div = document.getElementById('ci-'+idx);
+  if(val === 'ERR') {
+    div.classList.add('has-error');
+  } else {
+    div.classList.remove('has-error');
+  }
 }
-function saveEv(){
-  if(selectedEquipIdx<0)return;
-  var ev={date:document.getElementById('ev-date').value||today,type:document.getElementById('ev-type').value,person:document.getElementById('ev-person').value,
-    symptom:document.getElementById('ev-symptom').value,desc:document.getElementById('ev-desc').value,sev:currentSev||'low',
-    parts:document.getElementById('ev-parts').value,vendor:document.getElementById('ev-vendor').value,
-    action:document.getElementById('ev-action').value,result:document.getElementById('ev-result').value,
-    cost:parseInt(document.getElementById('ev-cost').value)||0,followup:document.getElementById('ev-followup').value};
-  if(!ev.symptom&&!ev.action){alert('증상 요약 또는 조치 내용을 입력해 주세요.');return;}
-  if(currentEvIdx>=0){equipData[selectedEquipIdx].evs[currentEvIdx]=ev;}
-  else{equipData[selectedEquipIdx].evs.push(ev);}
-  equipData[selectedEquipIdx].evs.sort(function(a,b){return a.date.localeCompare(b.date);});
-  closeModal('evModal');renderEquipList();if(selectedEquipIdx>=0)selectEquip(selectedEquipIdx);markDirty();
+
+function changeMemo(idx, val) { chkItems[idx].memo = val; }
+function toggleMemo(idx) {
+  var area = document.getElementById('ma-'+idx);
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
 }
-function deleteEv(ei,evi){
-  var ev=equipData[ei].evs[evi];
-  confirm2('['+ev.date+' / '+ev.type+'] 이력을 삭제하시겠습니까?',function(){
-    delete openTlItems[ei+'_'+evi];equipData[ei].evs.splice(evi,1);
-    renderEquipList();if(selectedEquipIdx===ei)selectEquip(ei);markDirty();
+
+function calcProgress() {
+  var total = chkItems.length;
+  var checked = 0;
+  document.querySelectorAll('.chk-cb').forEach(cb => { if(cb.checked) checked++; });
+  var pct = Math.round((checked/total)*100);
+  document.getElementById('p-pct').innerText = pct + "%";
+  document.getElementById('p-bar').style.width = pct + "%";
+}
+
+function valTH(zone) {
+  var t = parseFloat(document.getElementById('th-'+zone+'-t').value);
+  var h = parseFloat(document.getElementById('th-'+zone+'-h').value);
+  var dot = document.getElementById('zd-'+zone);
+  
+  if(t >= 18 && t <= 25 && h >= 30 && h <= 60) {
+    dot.className = "zdot ok";
+  } else {
+    dot.className = "zdot warn";
+  }
+}
+
+// [개선] 일일점검 마스터와 상세요소를 분할해서 구글시트 행 단위 누적 추가(Append)
+function submitDailyCheck() {
+  if(!GAS_URL) { alert("설정에서 구글 Apps Script Web App URL을 먼저 기입하세요."); return; }
+  
+  var master = {
+    date: document.getElementById('chk-date').value,
+    shift: document.getElementById('chk-shift').value,
+    person: document.getElementById('chk-worker').value.trim(),
+    th_A: document.getElementById('th-A-t').value + "°C / " + document.getElementById('th-A-h').value + "%",
+    th_B: document.getElementById('th-B-t').value + "°C / " + document.getElementById('th-B-h').value + "%",
+    th_M: document.getElementById('th-M-t').value + "°C / " + document.getElementById('th-M-h').value + "%"
+  };
+  
+  if(!master.person) { alert("책임 점검자 이름을 입력해 주세요."); return; }
+  
+  var details = [];
+  chkItems.forEach((item, idx) => {
+    var cb = document.getElementById('ci-'+idx).querySelector('.chk-cb');
+    if(cb.checked) {
+      details.push({
+        cat: item.cat,
+        text: item.text,
+        result: item.sel,
+        memo: item.memo
+      });
+    }
+  });
+
+  setBarState('loading', '구글 시트 탭 분산 전송 중... (DailyChecks & CheckDetails 배분)');
+  
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({
+      action: "saveDailyCheck",
+      master: master,
+      details: details
+    })
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(res.result === "success") {
+      setBarState('ok', '일일 점검 결과가 분산 탭 테이블 구조에 한 줄씩 정상 누적 추가되었습니다.');
+      alert("구글 시트에 행 단위 분산 저장이 완료되었습니다.");
+    } else {
+      setBarState('error', '제출 실패: ' + res.error);
+    }
+  })
+  .catch(err => {
+    setBarState('error', '네트워크 연동 실패: ' + err.toString());
   });
 }
 
-buildChk();
-buildZoneGrid();
-renderEquipList();
-loadFromSheets();
+
+// --- 방송 장비 및 수리 이력 분산 처리부 (핵심 개선반) ---
+function renderEquipList() {
+  var box = document.getElementById('eq-list-box');
+  box.innerHTML = `<div class="equip-list-head"><span class="equip-list-title">장비 자산 목록</span></div>`;
+  
+  equipData.forEach((eq, idx) => {
+    var item = document.createElement('div');
+    item.className = "equip-list-item" + (idx === selectedEquipIdx ? " active" : "");
+    item.onclick = function() { selectEquip(idx); };
+    
+    var bCls = eq.status==='정상'?'b-ok':eq.status==='관찰요망'?'b-warn':'b-err';
+    item.innerHTML = `
+      <div>
+        <div class="eli-name">${eq.name}</div>
+        <div class="eli-sub">${eq.model} | ${eq.loc}</div>
+      </div>
+      <div class="eli-right">
+        <span class="badge ${bCls}">${eq.status}</span>
+        <span style="font-size:9px;color:var(--faint);">${eq.id}</span>
+      </div>
+    `;
+    box.appendChild(item);
+  });
+}
+
+// [개선] 특정 장비를 선택하면 전체를 로드하지 않고 그 장비에 속한 행(Row)만 가볍게 라우팅 쿼리
+function selectEquip(idx) {
+  selectedEquipIdx = idx;
+  renderEquipList();
+  
+  var eq = equipData[idx];
+  var panel = document.getElementById('eq-panel-box');
+  panel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-equip-name">${eq.name} <span style="font-size:12px;color:var(--muted);font-weight:normal;margin-left:6px;">[자산코드: ${eq.id}]</span></div>
+        <div class="panel-equip-meta">모델: ${eq.model} | 위치: ${eq.loc} | 도입시기: ${eq.date}</div>
+      </div>
+      <div class="panel-head-actions">
+        <button class="btn-ghost btn-sm" onclick="openEvModal(-1)">＋ 신규 이력 등록</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="section-label">정비 및 고장 대응 기록 타임라인 (구글 시트 실시간 행 필터링)</div>
+      <div id="timeline-loading" style="padding:20px; text-align:center; color:var(--muted); font-size:12px;">
+        🔄 이 장비 전용 수리이력 레코드를 구글시트 'RepairHistory' 탭에서 한 줄씩 검색 매칭 중...
+      </div>
+      <div class="timeline" id="panel-timeline" style="display:none;"></div>
+    </div>
+  `;
+  
+  if(!GAS_URL) {
+    document.getElementById('timeline-loading').innerText = "⚠️ API 주소가 지정되지 않아 모의 테스트 오프라인 상태입니다.";
+    currentLoadedHistory = [];
+    renderTimeline([]);
+    return;
+  }
+  
+  // 가벼운 GET 쿼리 발송
+  fetch(`${GAS_URL}?action=getRepairHistory&equipId=${eq.id}`)
+    .then(res => res.json())
+    .then(data => {
+      currentLoadedHistory = data;
+      document.getElementById('timeline-loading').style.display = 'none';
+      document.getElementById('panel-timeline').style.display = 'block';
+      renderTimeline(data);
+    })
+    .catch(err => {
+      document.getElementById('timeline-loading').innerText = "❌ 데이터 조회 실패: " + err.toString();
+    });
+}
+
+function renderTimeline(list) {
+  var container = document.getElementById('panel-timeline');
+  container.innerHTML = "";
+  
+  if(!list || list.length === 0) {
+    container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--faint);font-size:13px;">등록된 정비 이력 및 특이사항 행이 없습니다.</div>`;
+    return;
+  }
+  
+  // 날짜 역순 정렬
+  list.sort((a,b) => b.date.localeCompare(a.date));
+  
+  list.forEach((ev, idx) => {
+    var dotCls = ev.sev === 'high' ? 'dot-high' : ev.sev === 'mid' ? 'dot-mid' : 'dot-low';
+    var bCls = ev.result === '완료' ? 'b-ok' : ev.result === '임시조치' ? 'b-warn' : 'b-err';
+    
+    var item = document.createElement('div');
+    item.className = "tl-item";
+    item.innerHTML = `
+      <div class="tl-dot ${dotCls}"></div>
+      <div class="tl-card" id="tlc-${idx}">
+        <div class="tl-row" onclick="toggleTlDetail(${idx})">
+          <div class="tl-date">${ev.date}</div>
+          <div class="tl-title">${ev.symptom || ev.action}</div>
+          <div class="tl-tags">
+            <span class="badge b-blue">${ev.type}</span>
+            <span class="badge ${bCls}">${ev.result}</span>
+            <span class="tl-toggle" id="tlt-${idx}">▼</span>
+          </div>
+          <div class="tl-actions" onclick="event.stopPropagation()">
+            <button class="btn-icon edit" onclick="openEvModal(${idx})">✏️</button>
+            <button class="btn-icon del" onclick="deleteEv(${idx})">🗑️</button>
+          </div>
+        </div>
+        <div class="tl-detail" id="tld-${idx}">
+          <div class="detail-grid">
+            <div class="detail-item"><div class="dl">담당자</div><div class="dv">${ev.person || '-'}</div></div>
+            <div class="detail-item"><div class="dl">외주업체 / 자산 부품</div><div class="dv">${ev.vendor || '자체'} / ${ev.parts || '없음'}</div></div>
+            <div class="detail-item"><div class="dl">소요 비용</div><div class="dv">${(ev.cost || 0).toLocaleString()} 원</div></div>
+            <div class="detail-item"><div class="dl">중요도 레이팅</div><div class="dv" style="text-transform:uppercase; font-weight:700;">${ev.sev}</div></div>
+          </div>
+          <div class="detail-full"><div class="dl">상세 발견 원인 및 내용</div><div class="dv">${ev.desc || '상세 내용이 기록되지 않았습니다.'}</div></div>
+          <div class="detail-full"><div class="dl">정비 및 조치 내역 상세</div><div class="dv">${ev.action || '-'}</div></div>
+          ${ev.followup ? `<div class="followup-box"><strong>후속 조치 계획:</strong> ${ev.followup}</div>` : ''}
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function toggleTlDetail(idx) {
+  var card = document.getElementById('tlc-'+idx);
+  var detail = document.getElementById('tld-'+idx);
+  var toggle = document.getElementById('tlt-'+idx);
+  
+  if(detail.classList.contains('open')) {
+    card.classList.remove('open');
+    detail.classList.remove('open');
+    toggle.classList.remove('open');
+  } else {
+    card.classList.add('open');
+    detail.classList.add('open');
+    toggle.classList.add('open');
+  }
+}
+
+function openEvModal(idx) {
+  currentEvIdx = idx;
+  setSev('low');
+  
+  if(idx >= 0) {
+    var ev = currentLoadedHistory[idx];
+    document.getElementById('modal-ev-title').innerText = "이력 레코드 수정 (행 갱신)";
+    document.getElementById('ev-date').value = ev.date;
+    document.getElementById('ev-type').value = ev.type;
+    document.getElementById('ev-person').value = ev.person || "";
+    document.getElementById('ev-symptom').value = ev.symptom || "";
+    document.getElementById('ev-desc').value = ev.desc || "";
+    document.getElementById('ev-parts').value = ev.parts || "";
+    document.getElementById('ev-vendor').value = ev.vendor || "";
+    document.getElementById('ev-cost').value = ev.cost || 0;
+    document.getElementById('ev-action').value = ev.action || "";
+    document.getElementById('ev-result').value = ev.result;
+    document.getElementById('ev-followup').value = ev.followup || "";
+    setSev(ev.sev || 'low');
+  } else {
+    document.getElementById('modal-ev-title').innerText = "새로운 인프라 정비 행(Row) 추가";
+    document.getElementById('ev-date').value = today;
+    document.getElementById('ev-type').selectedIndex = 0;
+    document.getElementById('ev-person').value = "";
+    document.getElementById('ev-symptom').value = "";
+    document.getElementById('ev-desc').value = "";
+    document.getElementById('ev-parts').value = "";
+    document.getElementById('ev-vendor').value = "";
+    document.getElementById('ev-cost').value = 0;
+    document.getElementById('ev-action').value = "";
+    document.getElementById('ev-result').selectedIndex = 0;
+    document.getElementById('ev-followup').value = "";
+  }
+  
+  document.getElementById('evModal').classList.add('open');
+}
+
+function setSev(s) {
+  currentSev = s;
+  document.querySelectorAll('.sev-btn').forEach(b => b.className = "sev-btn");
+  document.getElementById('sb-'+s).classList.add('sel-'+s);
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// [개선] 이력을 저장할 때 거대 구조를 다 보내지 않고 이번 입력 레코드만 GAS에 쏘아 appendRow 유도
+function saveEv() {
+  if(selectedEquipIdx < 0) return;
+  if(!GAS_URL) { alert("설정 연동 URL이 기입되어 있어야 구글시트에 단일 행 적재가 가능합니다."); return; }
+  
+  var targetEquip = equipData[selectedEquipIdx];
+  
+  var ev = {
+    id: currentEvIdx >= 0 ? currentLoadedHistory[currentEvIdx].id : "REV-" + new Date().getTime(),
+    equipId: targetEquip.id,
+    date: document.getElementById('ev-date').value || today,
+    type: document.getElementById('ev-type').value,
+    person: document.getElementById('ev-person').value.trim(),
+    symptom: document.getElementById('ev-symptom').value.trim(),
+    desc: document.getElementById('ev-desc').value.trim(),
+    sev: currentSev || 'low',
+    parts: document.getElementById('ev-parts').value.trim(),
+    vendor: document.getElementById('ev-vendor').value.trim(),
+    cost: parseInt(document.getElementById('ev-cost').value) || 0,
+    action: document.getElementById('ev-action').value.trim(),
+    result: document.getElementById('ev-result').value,
+    followup: document.getElementById('ev-followup').value.trim()
+  };
+  
+  if(!ev.symptom && !ev.action) { alert('증상 요약 또는 조치 내용을 입력해 주세요.'); return; }
+  
+  setBarState('loading', '구글 시트 RepairHistory 탭에 레코드 반영 중...');
+  
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({
+      action: "saveRepair",
+      isEdit: currentEvIdx >= 0,
+      data: ev
+    })
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(res.result === "success") {
+      closeModal('evModal');
+      setBarState('ok', '정비 내역 한 줄이 구글시트 DB에 즉각 업데이트되었습니다.');
+      // 변경 요소가 수립되었으므로 해당 장비를 다시 강제 쿼리 로드
+      selectEquip(selectedEquipIdx);
+      updateStats();
+    } else {
+      setBarState('error', '행 저장 실패: ' + res.error);
+    }
+  })
+  .catch(err => {
+    setBarState('error', '네트워크 연동 실패: ' + err.toString());
+  });
+}
+
+// [개선] 삭제 역시 지정 행ID를 기반으로 타겟 로우 소거 명령 전송
+function deleteEv(idx) {
+  if(!GAS_URL) { alert("연동 주소가 세팅되어 있지 않습니다."); return; }
+  var ev = currentLoadedHistory[idx];
+  
+  document.getElementById('confirm-msg-text').innerText = `[${ev.date}] [${ev.type}] 정비 내역 고유행을 구글시트에서 삭제하시겠습니까?`;
+  document.getElementById('confirmModal').classList.add('open');
+  
+  document.getElementById('confirm-ok-btn').onclick = function() {
+    closeModal('confirmModal');
+    setBarState('loading', '구글 시트에서 타겟 행(Row) 탐색 및 소거 진행 중...');
+    
+    fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "deleteRepair",
+        id: ev.id
+      })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.result === "success") {
+        setBarState('ok', '구글 시트 내의 정비 이력 로우가 완전히 삭제되었습니다.');
+        selectEquip(selectedEquipIdx);
+        updateStats();
+      } else {
+        setBarState('error', '삭제 처리 실패: ' + res.error);
+      }
+    })
+    .catch(err => {
+      setBarState('error', '네트워크 연동 에러: ' + err.toString());
+    });
+  };
+}
+
+// --- 공통 연동부 및 대시보드 ---
+function reloadData() {
+  if(selectedEquipIdx >= 0) {
+    selectEquip(selectedEquipIdx);
+  } else {
+    alert("조회 중인 단일 장비가 없습니다. 장비를 선택하면 구글시트에서 실시간으로 탭 정보를 긁어옵니다.");
+  }
+}
+
+function updateStats() {
+  document.getElementById('st-total').innerText = equipData.length;
+  var normal = 0, warn = 0;
+  equipData.forEach(e => {
+    if(e.status==='정상') normal++;
+    else if(e.status==='관찰요망') warn++;
+  });
+  document.getElementById('st-active').innerText = normal;
+  document.getElementById('st-warn').innerText = warn;
+  document.getElementById('st-repair').innerText = "4"; // 목업 통계
+}
+
+function initDashboard() {
+  // 모니터 수치 덤프 반영
+  document.getElementById('av-at').innerText = "22.5 °C";
+  document.getElementById('av-ah').innerText = "45 %";
+  document.getElementById('av-bt').innerText = "23.1 °C";
+  document.getElementById('av-bh').innerText = "42 %";
+  document.getElementById('av-mt').innerText = "21.8 °C";
+  document.getElementById('av-mh').innerText = "48 %";
+  
+  var ctx = document.getElementById('dashChart').getContext('2d');
+  if(chartInstance) chartInstance.destroy();
+  
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['06/16', '06/17', '06/18', '06/19', '06/20', '06/21', '06/22(오늘)'],
+      datasets: [
+        {
+          label: '정기점검 건수',
+          data: [1, 2, 1, 1, 3, 1, 2],
+          backgroundColor: 'rgba(29, 111, 164, 0.7)'
+        },
+        {
+          label: '긴급 정비 수리',
+          data: [0, 1, 0, 2, 0, 0, 1],
+          backgroundColor: 'rgba(208, 2, 27, 0.7)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+  });
+}
 </script>
 </body>
 </html>
