@@ -1107,14 +1107,31 @@ function renderDailyHistTable(list) {
     tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:var(--faint);padding:20px;">조회된 이력이 없습니다.</td></tr>`;
     return;
   }
-  list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
-  tbody.innerHTML = list.map(h => {
-    var errCnt = parseInt(h.errCount||0);
+
+  // 날짜 파서 (GAS 전체 날짜 문자열 포함 대응)
+  function parseDate(raw) {
+    if(!raw) return new Date(0);
+    var d = new Date(raw);
+    return isNaN(d.getTime()) ? new Date(0) : d;
+  }
+  function fmtDate(raw) {
+    var d = parseDate(raw);
+    if(d.getTime() === 0) return raw || '-';
+    return d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  }
+
+  // 최신 → 오래된 순 정렬
+  list.slice().sort(function(a,b){ return parseDate(b.date) - parseDate(a.date); })
+  .forEach(function(h) {
+    var errCnt  = parseInt(h.errCount||0);
     var warnCnt = parseInt(h.warnCount||0);
-    var errBadge = errCnt > 0 ? `<span class="badge b-err">${errCnt}건</span>` : '<span class="badge b-ok">없음</span>';
+    var errBadge  = errCnt  > 0 ? `<span class="badge b-err">${errCnt}건</span>`  : '<span class="badge b-ok">없음</span>';
     var warnBadge = warnCnt > 0 ? `<span class="badge b-warn">${warnCnt}건</span>` : '<span class="badge b-ok">없음</span>';
-    return `<tr>
-      <td style="font-weight:600">${h.date||'-'}</td>
+    var tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600;white-space:nowrap">${fmtDate(h.date)}</td>
       <td>${(h.shift||'-').replace('주간 (09:00~18:00)','주간').replace('야간 (18:00~09:00)','야간')}</td>
       <td>${h.person||'-'}</td>
       <td style="font-size:11px">${h.th_AP||'-'}</td>
@@ -1126,8 +1143,9 @@ function renderDailyHistTable(list) {
       <td style="text-align:center">${h.totalCount||'-'}개</td>
       <td style="text-align:center">${errBadge}</td>
       <td style="text-align:center">${warnBadge}</td>
-    </tr>`;
-  }).join('');
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // 온도/습도 모드 전환
@@ -1144,49 +1162,62 @@ function setThMode(mode) {
 function buildThChart(historyData) {
   window._lastThHistory = historyData;
 
-  // 최근 7일 날짜 레이블
-  var today7 = new Date();
-  var labels = [];
-  var dateKeys = [];
-  for(var i = 6; i >= 0; i--) {
-    var d = new Date(today7); d.setDate(d.getDate() - i);
-    var mm = String(d.getMonth()+1).padStart(2,'0');
-    var dd = String(d.getDate()).padStart(2,'0');
-    labels.push(mm + '/' + dd);
-    dateKeys.push(d.getFullYear() + '-' + mm + '-' + dd);
-  }
-
   var zones = [
-    {key:'th_AP', name:'A 부조정실', color:'rgba(208,2,27,0.9)',  inputT:'th-AP-t', inputH:'th-AP-h'},
+    {key:'th_AP', name:'A 부조정실', color:'rgba(208,2,27,0.9)',   inputT:'th-AP-t', inputH:'th-AP-h'},
     {key:'th_MC', name:'주조정실',   color:'rgba(29,111,164,0.9)', inputT:'th-MC-t', inputH:'th-MC-h'},
-    {key:'th_MR', name:'통합기계실', color:'rgba(5,150,105,0.9)', inputT:'th-MR-t', inputH:'th-MR-h'},
-    {key:'th_BP', name:'B 부조정실', color:'rgba(217,119,6,0.9)', inputT:'th-BP-t', inputH:'th-BP-h'},
-    {key:'th_BM', name:'B 기계실',   color:'rgba(124,58,237,0.9)',inputT:'th-BM-t', inputH:'th-BM-h'},
+    {key:'th_MR', name:'통합기계실', color:'rgba(5,150,105,0.9)',  inputT:'th-MR-t', inputH:'th-MR-h'},
+    {key:'th_BP', name:'B 부조정실', color:'rgba(217,119,6,0.9)',  inputT:'th-BP-t', inputH:'th-BP-h'},
+    {key:'th_BM', name:'B 기계실',   color:'rgba(124,58,237,0.9)', inputT:'th-BM-t', inputH:'th-BM-h'},
     {key:'th_UP', name:'UPS실',      color:'rgba(107,114,128,0.9)',inputT:'th-UP-t', inputH:'th-UP-h'}
   ];
 
-  // 오늘 날짜 키 (폴백용)
-  var todayKey = dateKeys[dateKeys.length - 1];
+  // 날짜 문자열 → Date 객체 (GAS가 반환하는 다양한 포맷 대응)
+  function parseDate(raw) {
+    if(!raw) return new Date(0);
+    var d = new Date(raw);
+    return isNaN(d.getTime()) ? new Date(0) : d;
+  }
+  // Date → "MM/DD" 레이블
+  function toLabel(d) {
+    return String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0');
+  }
 
+  // ── 최근 7개 레코드 추출 (날짜 오름차순) ──────────────
+  var sorted = (historyData || []).slice().sort(function(a,b){
+    return parseDate(a.date) - parseDate(b.date);
+  });
+  var recent7 = sorted.slice(-7);   // 마지막 7개
+
+  // 오늘 값 폴백 추가: 이력이 아예 없으면 오늘 입력값 1개라도 표시
+  var hasTodayData = recent7.some(function(h){
+    var dd = parseDate(h.date); var now = new Date();
+    return dd.getFullYear()===now.getFullYear() && dd.getMonth()===now.getMonth() && dd.getDate()===now.getDate();
+  });
+  if(!hasTodayData) {
+    var todayFallback = { date: new Date().toISOString() };
+    zones.forEach(function(z){
+      var tEl = document.getElementById(z.inputT);
+      var hEl = document.getElementById(z.inputH);
+      if(tEl && hEl) todayFallback[z.key] = tEl.value + '°C / ' + hEl.value + '%';
+    });
+    recent7.push(todayFallback);
+    if(recent7.length > 7) recent7.shift();
+  }
+
+  var labels = recent7.map(function(h){ return toLabel(parseDate(h.date)); });
+
+  // ── 데이터셋 ──────────────────────────────────────────
   var datasets = zones.map(function(z) {
-    var vals = dateKeys.map(function(dateStr) {
-      // 1) 구글 시트 이력 우선
-      var matches = historyData.filter(function(h){ return (h.date||'').startsWith(dateStr); });
-      if(matches.length) {
-        var raw = matches[matches.length-1][z.key] || '';
-        if(thMode === 'temp') {
-          var m = raw.match(/([\d.]+)°C/); if(m) return parseFloat(m[1]);
-        } else {
-          var m = raw.match(/([\d.]+)%/);  if(m) return parseFloat(m[1]);
-        }
+    var vals = recent7.map(function(h) {
+      var raw = h[z.key] || '';
+      if(thMode === 'temp') {
+        var m = raw.match(/([\d.]+)\s*°C/); return m ? parseFloat(m[1]) : null;
+      } else {
+        // "22.5°C / 45%" 에서 두 번째 숫자(습도) 추출
+        var parts = raw.split('/');
+        var hPart = parts[1] || parts[0] || '';
+        var m = hPart.match(/([\d.]+)/); return m ? parseFloat(m[1]) : null;
       }
-      // 2) 이력 없고 오늘 날짜면 → 현재 입력 필드값 사용
-      if(dateStr === todayKey) {
-        var inputId = thMode === 'temp' ? z.inputT : z.inputH;
-        var el = document.getElementById(inputId);
-        if(el && el.value) return parseFloat(el.value);
-      }
-      return null;
     });
     return {
       label: z.name,
@@ -1194,7 +1225,7 @@ function buildThChart(historyData) {
       borderColor: z.color,
       backgroundColor: z.color.replace('0.9','0.08'),
       borderWidth: 2.5,
-      pointRadius: 4,
+      pointRadius: 5,
       pointHoverRadius: 7,
       tension: 0.35,
       spanGaps: true,
