@@ -19,953 +19,553 @@
   --elec-bg:#FFFBEB;--elec-border:#FDE68A;
   --sys-bg:#EFF6FF;--sys-border:#BFDBFE;
   --safe-bg:#ECFDF5;--safe-border:#A7F3D0;
-  --radius:8px;--radius-lg:12px;--shadow:0 1px 3px rgba(0,0,0,0.08);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;font-size:14px}
-.shell{display:flex;min-height:100vh}
-.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.content{flex:1;padding:24px;overflow-y:auto}
-.brand{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.brand-logo{font-size:17px;font-weight:800;color:var(--red)}
-.brand-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.nav-section{padding:10px 10px 4px}
-.nav-label{font-size:10px;font-weight:700;color:var(--faint);letter-spacing:.8px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--muted);font-size:13px;transition:all .15s;margin-bottom:2px}
-.nav-item:hover{background:var(--bg);color:var(--text)}
-.nav-item.active{background:var(--red-light);color:var(--red);font-weight:700}
-.nav-item .ico{font-size:15px;width:18px;text-align:center;flex-shrink:0}
-.nav-footer{margin-top:auto;padding:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center}
-.page-title{font-size:15px;font-weight:700}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.chip-ok{background:var(--ok-bg);color:var(--ok)}.chip-warn{background:var(--warn-bg);color:var(--warn)}.chip-err{background:var(--err-bg);color:var(--err)}
-.page{display:none}.page.on{display:block}
-.form-grid{display:grid;gap:10px;margin-bottom:16px}
-.grid-3{grid-template-columns:1fr 1fr 1fr}.grid-2{grid-template-columns:1fr 1fr}
-.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;letter-spacing:.3px;text-transform:uppercase}
-.field input,.field select{width:100%;padding:7px 11px;border:1px solid var(--border-dark);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);outline:none}
-.field input:focus,.field select:focus{border-color:var(--red)}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow)}
-.stat-card .num{font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
-.stat-card .lbl{font-size:11px;color:var(--muted)}
-.num-default{color:var(--text)}.num-ok{color:var(--ok)}.num-err{color:var(--err)}.num-warn{color:var(--warn)}
-.prog-wrap{margin-bottom:16px}
-.prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.prog-label{font-size:12px;color:var(--muted)}.prog-pct{font-size:13px;font-weight:700}
-.prog-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-.prog-bar{height:100%;background:var(--red);border-radius:3px;transition:width .3s}
-.cat-block{margin-bottom:16px}
-.cat-header{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:var(--radius);font-size:12px;font-weight:700;margin-bottom:7px;border:1px solid}
-.cat-elec{background:var(--elec-bg);border-color:var(--elec-border);color:#92400E}
-.cat-sys{background:var(--sys-bg);border-color:var(--sys-border);color:#1E40AF}
-.cat-safe{background:var(--safe-bg);border-color:var(--safe-border);color:#065F46}
-.chk-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:3px}
-.chk-item:hover{background:#F0F4FF}
-.chk-item.checked{background:var(--ok-bg);border-color:var(--safe-border)}
-.chk-item.has-error{background:var(--err-bg);border-color:var(--red-mid)}
-.chk-cb{width:16px;height:16px;accent-color:var(--ok);cursor:pointer;flex-shrink:0}
-.chk-text{flex:1;font-size:12px;line-height:1.5}
-.chk-sel{font-size:11px;padding:4px 7px;border:1px solid var(--border-dark);border-radius:6px;background:var(--surface);color:var(--text);width:88px;flex-shrink:0;outline:none;cursor:pointer}
-.memo-btn{font-size:11px;padding:4px 9px;border:1px solid var(--border-dark);border-radius:6px;background:var(--surface);color:var(--muted);cursor:pointer;flex-shrink:0}
-.memo-btn:hover{border-color:var(--red);color:var(--red)}
-.memo-area{padding:3px 12px 7px 38px}
-.memo-area textarea{width:100%;padding:6px 9px;border:1px solid var(--border-dark);border-radius:6px;font-size:12px;resize:none;height:44px;outline:none;background:var(--surface);color:var(--text)}
-.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-.btn-primary{padding:8px 20px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer}
-.btn-primary:hover{background:#A50015}
-.btn-ghost{padding:8px 14px;background:var(--surface);border:1px solid var(--border-dark);border-radius:var(--radius);font-size:13px;color:var(--muted);cursor:pointer}
-.btn-ghost:hover{border-color:var(--red);color:var(--red)}
-.btn-sm{padding:5px 11px;font-size:11px}
-.btn-icon{padding:4px 8px;border:1px solid var(--border-dark);border-radius:6px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--muted);line-height:1}
-.btn-icon.edit:hover{border-color:var(--blue);color:var(--blue)}
-.btn-icon.del:hover{border-color:var(--err);color:var(--err)}
-.notice{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--warn-bg);border:1px solid #FDE68A;border-radius:var(--radius);font-size:12px;color:#92400E;margin-bottom:14px}
-.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.zone-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;box-shadow:var(--shadow)}
-.zone-title{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.zdot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex-shrink:0}
-.zdot.ok{background:var(--ok)}.zdot.warn{background:var(--err)}
-.zone-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.zone-inputs label{font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:2px;text-transform:uppercase}
-.zone-inputs input{width:100%;padding:6px 8px;border:1px solid var(--border-dark);border-radius:6px;font-size:13px;font-weight:600;text-align:center;outline:none;background:var(--bg)}
-.zone-inputs input.bad{border-color:var(--err);background:var(--err-bg);color:var(--err)}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{padding:7px 10px;border-bottom:2px solid var(--border);text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap}
-td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg)}
-.flt-row{display:flex;gap:7px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.flt-row label{font-size:11px;font-weight:700;color:var(--muted)}
-.flt-row input[type=date],.flt-row select{padding:5px 9px;border:1px solid var(--border-dark);border-radius:6px;font-size:12px;color:var(--text);background:var(--surface);outline:none}
-.flt-row input[type=checkbox]{accent-color:var(--red);cursor:pointer}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.b-ok{background:var(--ok-bg);color:var(--ok)}.b-err{background:var(--err-bg);color:var(--err)}
-.b-warn{background:var(--warn-bg);color:var(--warn)}.b-blue{background:var(--blue-bg);color:var(--blue)}
-.b-purple{background:var(--purple-bg);color:var(--purple)}
-.chart-wrap{position:relative;width:100%;height:270px}
-.legend-row{display:flex;gap:14px;margin-bottom:9px;flex-wrap:wrap}
-.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.leg-sq{width:14px;height:3px;border-radius:2px}
-.avg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.avg-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px;text-align:center}
-.avg-card .az{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
-.avg-card .at{font-size:18px;font-weight:800}.avg-card .ah{font-size:13px;font-weight:600;margin-top:1px}
-.divider{height:1px;background:var(--border);margin:18px 0}
-.section-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.equip-layout{display:flex;gap:0;height:calc(100vh - 200px);min-height:500px}
-.equip-list{width:260px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow-y:auto;box-shadow:var(--shadow)}
-.equip-list-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
-.equip-list-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}
-.equip-list-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.equip-list-item:last-child{border:none}
-.equip-list-item:hover{background:var(--bg)}
-.equip-list-item.active{background:var(--red-light);border-left:3px solid var(--red)}
-.eli-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
-.eli-sub{font-size:11px;color:var(--muted)}
-.eli-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
-.equip-panel{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-left:12px;overflow-y:auto;box-shadow:var(--shadow);display:flex;flex-direction:column}
-.panel-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--faint);font-size:13px;gap:8px}
-.panel-empty .icon{font-size:36px}
-.panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;background:var(--surface);z-index:1}
-.panel-equip-name{font-size:15px;font-weight:700}
-.panel-equip-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.panel-head-actions{display:flex;gap:6px;align-items:center}
-.panel-body{flex:1;padding:16px 20px;overflow-y:auto}
-.timeline{position:relative;padding-left:20px}
-.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:var(--border)}
-.tl-item{position:relative;margin-bottom:10px}
-.tl-dot{position:absolute;left:-18px;top:12px;width:10px;height:10px;border-radius:50%;border:2px solid var(--surface);z-index:1}
-.dot-low{background:var(--ok)}.dot-mid{background:var(--warn)}.dot-high{background:var(--err)}
-.tl-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;cursor:pointer}
-.tl-card:hover{background:#F0F4FF}
-.tl-card.open{background:var(--surface);border-color:var(--blue)}
-.tl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tl-date{font-size:11px;color:var(--muted);font-weight:600;width:72px;flex-shrink:0}
-.tl-title{font-size:13px;font-weight:600;flex:1}
-.tl-tags{display:flex;gap:4px;align-items:center;margin-left:auto}
-.tl-actions{display:flex;gap:4px;margin-left:6px}
-.tl-toggle{font-size:10px;color:var(--muted);margin-left:4px;transition:transform .2s}
-.tl-toggle.open{transform:rotate(180deg)}
-.tl-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-.tl-detail.open{display:block}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:10px}
-.detail-item .dl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
-.detail-item .dv{font-size:12px;color:var(--text);line-height:1.5}
-.detail-full{margin-bottom:8px}
-.detail-full .dl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
-.detail-full .dv{font-size:12px;color:var(--text);line-height:1.6;background:var(--bg);padding:8px 10px;border-radius:6px}
-.followup-box{background:var(--warn-bg);border:1px solid #FDE68A;border-radius:6px;padding:8px 10px;font-size:12px;color:#92400E;margin-top:6px}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:var(--radius-lg);width:700px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
-.modal-sm{width:480px}
-.modal-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
-.modal-head h3{font-size:15px;font-weight:700}
-.modal-close{font-size:20px;cursor:pointer;color:var(--muted);background:none;border:none;line-height:1;padding:4px}
-.modal-body{padding:20px 24px}
-.modal-foot{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
-.mform-grid{display:grid;gap:12px}
-.mform-grid.g2{grid-template-columns:1fr 1fr}
-.mform-grid.g3{grid-template-columns:1fr 1fr 1fr}
-.mfield label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
-.mfield input,.mfield select,.mfield textarea{width:100%;padding:8px 11px;border:1px solid var(--border-dark);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);outline:none}
-.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--red)}
-.mfield textarea{resize:vertical;min-height:60px}
-.section-divider{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:12px 0 8px;border-top:1px solid var(--border);margin-top:6px}
-.severity-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
-.sev-btn{padding:8px;border:1px solid var(--border-dark);border-radius:var(--radius);cursor:pointer;text-align:center;font-size:12px;font-weight:600;background:var(--bg);color:var(--muted)}
-.sev-btn.sel-low{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
-.sev-btn.sel-mid{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
-.sev-btn.sel-high{background:var(--err-bg);border-color:var(--err);color:var(--err)}
-.confirm-msg{font-size:14px;line-height:1.6;margin-bottom:6px}
-.confirm-sub{font-size:12px;color:var(--muted)}
-/* 상태바 */
-.data-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--radius);margin-bottom:16px;border:1px solid;font-size:12px}
-.data-bar.ok{background:var(--ok-bg);border-color:var(--safe-border);color:#065F46}
-.data-bar.dirty{background:var(--warn-bg);border-color:#FDE68A;color:#92400E}
-.data-bar.loading{background:var(--blue-bg);border-color:#BFDBFE;color:var(--blue)}
-.data-bar.error{background:var(--err-bg);border-color:var(--red-mid);color:var(--err)}
-.db-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot-g{background:var(--ok)}.dot-y{background:var(--warn)}.dot-b{background:var(--blue)}.dot-r{background:var(--err)}
-.db-msg{flex:1;font-weight:500}
-.db-btns{display:flex;gap:6px;flex-shrink:0}
-.btn-db-save{padding:6px 16px;background:var(--ok);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
-.btn-db-save:disabled{background:var(--faint);cursor:default}
-.btn-db-reload{padding:6px 12px;background:var(--surface);color:var(--muted);border:1px solid var(--border-dark);border-radius:6px;font-size:12px;cursor:pointer}
-.btn-db-setting{padding:6px 10px;background:var(--surface);color:var(--muted);border:1px solid var(--border-dark);border-radius:6px;font-size:12px;cursor:pointer}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+header{background:#111827;color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+header h1{font-size:16px;font-weight:700;}
+header .logo-txt{color:#FF6B00;font-weight:900;margin-right:4px;}
+.top-nav{display:flex;gap:8px;}
+.nav-btn{background:transparent;border:none;color:#9CA3AF;padding:6px 12px;font-size:13px;cursor:pointer;border-radius:4px;font-weight:500;}
+.nav-btn.active{background:#374151;color:#fff;}
+.main-container{display:flex;flex:1;overflow:hidden;}
+
+/* 뷰 전환 */
+.view-pane{display:none;flex:1;overflow:hidden;}
+.view-pane.active{display:flex;}
+
+/* 대시보드 전용 스타일 */
+#view-dash{padding:20px;flex-direction:column;gap:15px;overflow-y:auto;width:100%;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.stat-card{background:var(--surface);padding:15px;border-radius:6px;border:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.stat-card .label{font-size:12px;color:var(--muted);}
+.stat-card .val{font-size:22px;font-weight:700;}
+
+/* 온습도 6개 구역 그리드 */
+.env-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.env-card{background:var(--surface);padding:12px;border-radius:6px;border:1px solid var(--border);border-top:4px solid var(--blue);}
+.env-card h4{font-size:13px;margin-bottom:6px;font-weight:600;}
+.env-data{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);}
+.env-data span b{font-size:14px;color:var(--text);font-weight:700;}
+
+/* 차트 및 점검표 */
+.chart-section, .chk-section{background:var(--surface);padding:15px;border-radius:6px;border:1px solid var(--border);display:flex;flex-direction:column;gap:10px;}
+.chart-header{display:flex;justify-content:space-between;align-items:center;}
+.chart-title{font-size:14px;font-weight:700;}
+.chart-toggle-btn{background:var(--bg);border:1px solid var(--border);padding:3px 8px;font-size:11px;border-radius:4px;cursor:pointer;}
+.chart-toggle-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.chart-container{position:relative;height:240px;width:100%;}
+.chk-table{width:100%;border-collapse:collapse;font-size:12px;}
+.chk-table th{background:#F9FAFB;padding:8px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);color:var(--muted);}
+.chk-table td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+
+/* 기존 장비/이력 스페이스 관리 UI 구조 (보존) */
+#view-equip{width:100%;height:100%;display:flex;}
+.side-list{width:320px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.side-header{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.side-header h3{font-size:14px;font-weight:700;}
+.btn-sm{padding:4px 8px;font-size:12px;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:#fff;}
+.btn-blue{background:var(--blue);color:#fff;border-color:var(--blue);}
+.list-scroll{flex:1;overflow-y:auto;padding:8px;}
+.equip-item{padding:10px;border-radius:6px;border:1px solid transparent;cursor:pointer;margin-bottom:6px;display:flex;flex-direction:column;gap:4px;}
+.equip-item:hover{background:var(--bg);}
+.equip-item.selected{background:var(--blue-bg);border-color:var(--blue);}
+.equip-item .top-line{display:flex;justify-content:space-between;align-items:center;}
+.equip-item .eq-name{font-size:13px;font-weight:600;}
+.equip-item .eq-info{font-size:11px;color:var(--muted);}
+
+.main-detail{flex:1;background:var(--surface);display:flex;flex-direction:column;overflow:hidden;}
+.detail-header{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
+.detail-title h2{font-size:18px;font-weight:700;margin-bottom:4px;}
+.detail-title p{font-size:12px;color:var(--muted);}
+.detail-scroll{flex:1;overflow-y:auto;padding:20px;}
+
+/* 테이블 및 배지 공통 */
+.badge{padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600;display:inline-block;}
+.badge.elec{background:var(--elec-bg); color:var(--warn); border:1px solid var(--elec-border);}
+.badge.sys{background:var(--sys-bg); color:var(--blue); border:1px solid var(--sys-border);}
+.badge.safe{background:var(--safe-bg); color:var(--ok); border:1px solid var(--safe-border);}
+
+.status-tag{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600;text-align:center;display:inline-block;}
+.status-tag.ok{background:var(--ok-bg); color:var(--ok);}
+.status-tag.warn{background:var(--warn-bg); color:var(--warn);}
+.status-tag.err{background:var(--err-bg); color:var(--err);}
+
+/* 모달 기본 스타일 */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#fff;border-radius:8px;width:500px;max-width:90%;display:flex;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.modal-body{padding:20px;overflow-y:auto;max-height:80vh;}
+.form-group{margin-bottom:12px;display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:12px;font-weight:600;color:var(--muted);}
+.form-group input, .form-group select, .form-group textarea{padding:8px;border:1px solid var(--border);border-radius:4px;font-size:13px;}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
 </style>
 </head>
 <body>
 
-<div class="modal-overlay" id="evModal">
-  <div class="modal">
-    <div class="modal-head"><h3 id="modal-ev-title">이력 추가</h3><button class="modal-close" onclick="closeModal('evModal')">✕</button></div>
-    <div class="modal-body">
-      <div class="mform-grid g3">
-        <div class="mfield"><label>작업 날짜</label><input type="date" id="ev-date"></div>
-        <div class="mfield"><label>작업 유형</label><select id="ev-type"><option>정기점검</option><option>수리</option><option>부품 교체</option><option>긴급수리</option><option>예방정비</option><option>성능점검</option><option>기타</option></select></div>
-        <div class="mfield"><label>담당자</label><input type="text" id="ev-person" placeholder="이름"></div>
-      </div>
-      <div class="section-divider">증상 / 발견 내용</div>
-      <div class="mfield" style="margin-bottom:10px"><label>증상 요약</label><input type="text" id="ev-symptom" placeholder="예) 팬 소음 발생"></div>
-      <div class="mfield" style="margin-bottom:4px"><label>상세 내용</label><textarea id="ev-desc" rows="2" placeholder="발견 경위, 증상 상세 명시"></textarea></div>
-      <div class="mfield"><label>중요도</label>
-        <div class="severity-row">
-          <div class="sev-btn" id="sb-low" onclick="setSev('low')">Low</div>
-          <div class="sev-btn" id="sb-mid" onclick="setSev('mid')">Medium</div>
-          <div class="sev-btn" id="sb-high" onclick="setSev('high')">High</div>
+<header>
+  <h1><span class="logo-txt">KT 알파쇼핑</span> 방송인프라 일일점검</h1>
+  <div class="top-nav">
+    <button id="nav-dash" class="nav-btn active" onclick="switchView('dash')">종합 대시보드</button>
+    <button id="nav-equip" class="nav-btn" onclick="switchView('equip')">장비 및 이력 점검 관리</button>
+  </div>
+</header>
+
+<div class="main-container">
+  
+  <div id="view-dash" class="view-pane active">
+    <div class="stat-row">
+      <div class="stat-card"><span class="label">전체 인프라 장비</span><span class="val" id="st-total">0</span></div>
+      <div class="stat-card"><span class="label">정상 가동 상태</span><span class="val" style="color:var(--ok);" id="st-active">0</span></div>
+      <div class="stat-card"><span class="label">관찰요망/정비대상</span><span class="val" style="color:var(--warn);" id="st-warn">0</span></div>
+      <div class="stat-card"><span class="label">오늘의 필수 점검사항</span><span class="val" style="color:var(--blue);">20 개 항목</span></div>
+    </div>
+
+    <div class="env-grid">
+      <div class="env-card"><h4>A부조정실</h4><div class="env-data"><span>온도: <b id="d-t-a">22.5°C</b></span><span>습도: <b id="d-h-a">45%</b></span></div></div>
+      <div class="env-card"><h4>주조정실</h4><div class="env-data"><span>온도: <b id="d-t-main">21.8°C</b></span><span>습도: <b id="d-h-main">42%</b></span></div></div>
+      <div class="env-card"><h4>통합기계실</h4><div class="env-data"><span>온도: <b id="d-t-tm">20.5°C</b></span><span>습도: <b id="d-h-tm">40%</b></span></div></div>
+      <div class="env-card"><h4>B부조정실</h4><div class="env-data"><span>온도: <b id="d-t-b">23.1°C</b></span><span>습도: <b id="d-h-b">44%</b></span></div></div>
+      <div class="env-card"><h4>B기계실</h4><div class="env-data"><span>온도: <b id="d-t-bm">22.8°C</b></span><span>습도: <b id="d-h-bm">46%</b></span></div></div>
+      <div class="env-card"><h4>UPS실</h4><div class="env-data"><span>온도: <b id="d-t-ups">21.0°C</b></span><span>습도: <b id="d-h-ups">38%</b></span></div></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-header">
+        <span class="chart-title">📊 최근 7일 주요 시설 온습도 종합 추이 그래프</span>
+        <div>
+          <button id="bm-chart-temp" class="chart-toggle-btn active" onclick="toggleChartMode('temp')">온도 추이(°C)</button>
+          <button id="bm-chart-hum" class="chart-toggle-btn" onclick="toggleChartMode('hum')">습도 추이(%)</button>
         </div>
       </div>
-      <div class="section-divider">조치 내역</div>
-      <div class="mform-grid g3">
-        <div class="mfield"><label>사용 부품</label><input type="text" id="ev-parts" placeholder="없음"></div>
-        <div class="mfield"><label>외주 업체</label><input type="text" id="ev-vendor" placeholder="자체 정비"></div>
-        <div class="mfield"><label>소요 비용 (원)</label><input type="number" id="ev-cost" value="0"></div>
-      </div>
-      <div class="mfield" style="margin-top:10px;margin-bottom:10px"><label>조치 내용</label><input type="text" id="ev-action" placeholder="조치 결과 기술"></div>
-      <div class="mform-grid g2">
-        <div class="mfield"><label>조치 결과</label><select id="ev-result"><option>완료</option><option>임시조치</option><option>관찰요망</option><option>미해결</option></select></div>
-        <div class="mfield"><label>후속 조치 사항</label><input type="text" id="ev-followup" placeholder="추후 관찰 일정 등"></div>
-      </div>
+      <div class="chart-container"><canvas id="dashChart"></canvas></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal('evModal')">취소</button>
-      <button class="btn-primary" onclick="saveEv()">저장</button>
-    </div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="confirmModal">
-  <div class="modal modal-sm">
-    <div class="modal-head"><h3>이력 삭제 확인</h3><button class="modal-close" onclick="closeModal('confirmModal')">✕</button></div>
-    <div class="modal-body">
-      <div class="confirm-msg" id="confirm-msg-text">이 항목을 정말 삭제하시겠습니까?</div>
-      <div class="confirm-sub">삭제된 데이터는 복구할 수 없습니다.</div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal('confirmModal')">취소</button>
-      <button class="btn-primary" id="confirm-ok-btn">삭제</button>
+    <div class="chk-section">
+      <span class="chart-title">✅ 금일 방송인프라 정기 일일 점검 현황 (20대 핵심 지표)</span>
+      <table class="chk-table">
+        <thead>
+          <tr><th style="width:50px;">번호</th><th style="width:100px;">분류</th><th>점검 항목 명칭</th><th>점검 확인 기준 항목</th><th style="width:90px; text-align:center;">상태</th></tr>
+        </thead>
+        <tbody id="dash-checklist-tbody"></tbody>
+      </table>
     </div>
   </div>
-</div>
 
-<div class="modal-overlay" id="settingModal">
-  <div class="modal modal-sm">
-    <div class="modal-head"><h3>시스템 설정</h3><button class="modal-close" onclick="closeModal('settingModal')">✕</button></div>
-    <div class="modal-body">
-      <div class="mfield"><label>Google Apps Script Web App URL</label><input type="text" id="setting-url" style="font-family:monospace;font-size:11px"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal('settingModal')">취소</button>
-      <button class="btn-primary" onclick="saveSetting()">적용</button>
-    </div>
-  </div>
-</div>
-
-<div class="shell">
-  <div class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">KT알화쇼핑</div>
-      <div class="brand-sub">방송인프라 일일점검시스템</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Main</div>
-      <div class="nav-item active" onclick="switchPage('chk')" id="mi-chk"><span class="ico">📋</span>일일 정기 점검</div>
-      <div class="nav-item" onclick="switchPage('equip')" id="mi-equip"><span class="ico">⚙️</span>방송 장비 관리</div>
-      <div class="nav-item" onclick="switchPage('dash')" id="mi-dash"><span class="ico">📊</span>통계 대시보드</div>
-    </div>
-    <div class="nav-footer">
-      <div>KT alpha Infrastructure</div>
-      <div style="font-size:9px;opacity:0.6;margin-top:2px">v2.0 (분산 DB 연동형)</div>
-    </div>
-  </div>
-  
-  <div class="main">
-    <div class="topbar">
-      <div class="page-title" id="bar-title">일일 정기 점검 기록</div>
-      <div class="topbar-right">
-        <span class="chip chip-ok" id="bar-status">시스템 연동 정상</span>
+  <div id="view-equip" class="view-pane">
+    <div class="side-list">
+      <div class="side-header">
+        <h3>인프라 장비 목록</h3>
+        <button class="btn-sm btn-blue" onclick="openEquipModal(-1)">+ 장비등록</button>
       </div>
+      <div class="list-scroll" id="equip-list-container"></div>
     </div>
     
-    <div class="content">
-      <div class="data-bar ok" id="db-bar">
-        <div class="db-dot dot-g" id="db-dot"></div>
-        <div class="db-msg" id="db-msg">분산 테이블 연동 모드가 활성화되어 있습니다. 데이터가 실시간으로 안전하게 행 분할 보관됩니다.</div>
-        <div class="db-btns">
-          <button class="btn-db-reload" onclick="reloadData()">새로고침</button>
-          <button class="btn-db-setting" onclick="openSetting()">⚙️</button>
+    <div class="main-detail">
+      <div class="detail-header" id="detail-header-view">
+        <div class="detail-title">
+          <h2 id="det-name">장비를 선택해 주세요</h2>
+          <p id="det-meta">선택 시 세부 사양 및 과거 점검 수리 이력이 출력됩니다.</p>
+        </div>
+        <div id="detail-actions" style="display:none; gap:6px;">
+          <button class="btn-sm" onclick="editCurrentEquip()">장비 정보 수정</button>
+          <button class="btn-sm btn-blue" onclick="openEvModal(-1)">+ 이력/점검 등록</button>
         </div>
       </div>
-      
-      <div class="page on" id="p-chk">
-        <div class="card">
-          <div class="form-grid grid-3">
-            <div class="field"><label>점검 일자</label><input type="date" id="chk-date"></div>
-            <div class="field"><label>점검 번차</label><select id="chk-shift"><option>주간 (09:00~18:00)</option><option>야간 (18:00~09:00)</option></select></div>
-            <div class="field"><label>책임 점검자</label><input type="text" id="chk-worker" placeholder="이름 입력"></div>
-          </div>
-        </div>
-        
-        <div class="zone-grid">
-          <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-A"></span>A Studio 환경</div>
-            <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="22.5" id="th-A-t" oninput="valTH('A')"></div>
-              <div><label>습도 (%)</label><input type="text" value="45" id="th-A-h" oninput="valTH('A')"></div>
-            </div>
-          </div>
-          <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-B"></span>B Studio 환경</div>
-            <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="23.1" id="th-B-t" oninput="valTH('B')"></div>
-              <div><label>습도 (%)</label><input type="text" value="42" id="th-B-h" oninput="valTH('B')"></div>
-            </div>
-          </div>
-          <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-M"></span>조정실 주 장비실</div>
-            <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="21.8" id="th-M-t" oninput="valTH('M')"></div>
-              <div><label>습도 (%)</label><input type="text" value="48" id="th-M-h" oninput="valTH('M')"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card" style="padding:10px 14px 14px">
-          <div class="prog-wrap">
-            <div class="prog-header"><span class="prog-label">전체 항목 점검 진척도</span><span class="prog-pct" id="p-pct">0%</span></div>
-            <div class="prog-track"><div class="prog-bar" id="p-bar" style="width:0%"></div></div>
-          </div>
-          <div id="chk-container"></div>
-          <div class="btn-row" style="margin-top:14px">
-            <button class="btn-primary" onclick="submitDailyCheck()">일일 점검 최종 제출 (구글시트 추가)</button>
-          </div>
-        </div>
+      <div class="detail-scroll">
+        <table class="chk-table" id="ev-table" style="display:none;">
+          <thead>
+            <tr><th>점검/수리일자</th><th>구분</th><th>증상 및 점검내용</th><th>조치 사항</th><th>담당자</th><th>비용</th><th style="width:100px; text-align:center;">관리</th></tr>
+          </thead>
+          <tbody id="ev-tbody"></tbody>
+        </table>
+        <div id="ev-empty-msg" style="text-align:center; padding:40px; color:var(--faint);">선택된 장비가 없거나 이력이 존재하지 않습니다.</div>
       </div>
-      
-      <div class="page" id="p-equip">
-        <div class="equip-layout">
-          <div class="equip-list" id="eq-list-box"></div>
-          <div class="equip-panel" id="eq-panel-box">
-            <div class="panel-empty">
-              <span class="icon">⚙️</span>
-              <span>좌측 리스트에서 조회할 방송 장비를 선택해 주세요.</span>
-              <span style="font-size:11px; opacity:0.7;">선택한 장비의 수리/교체 이력 행(Row)만 가볍게 실시간 필터 로드합니다.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="page" id="p-dash">
-        <div class="stat-row">
-          <div class="stat-card"><div class="num num-default" id="st-total">0</div><div class="lbl">총 관리 장비 수</div></div>
-          <div class="stat-card"><div class="num num-ok" id="st-active">0</div><div class="lbl">정상 운용 장비</div></div>
-          <div class="stat-card"><div class="num num-warn" id="st-warn">0</div><div class="lbl">주의/관찰 대상</div></div>
-          <div class="stat-card"><div class="num num-err" id="st-repair">0</div><div class="lbl">당월 누적 정비 수</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px">
-          <div class="card">
-            <div class="section-label">최근 7일간 정비 유형 분포 및 비용 추이</div>
-            <div class="chart-wrap"><canvas id="dashChart"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="section-label">종합 온습도 평균 모니터링</div>
-            <div class="avg-grid" style="margin-bottom:14px">
-              <div class="avg-card"><div class="az">A 스튜디오</div><div class="at" id="av-at">-</div><div class="ah" id="av-ah">-</div></div>
-              <div class="avg-card"><div class="az">B 스튜디오</div><div class="at" id="av-bt">-</div><div class="ah" id="av-bh">-</div></div>
-              <div class="avg-card"><div class="az">주 조정실</div><div class="at" id="av-mt">-</div><div class="ah" id="av-mh">-</div></div>
-            </div>
-            <div class="section-label">종합 인프라 가동 통계</div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>구분</th><th>점검수</th><th>이상발견</th><th>가동률</th></tr></thead>
-                <tbody>
-                  <tr><td>전력 유닛</td><td>12회</td><td>0건</td><td>100%</td></tr>
-                  <tr><td>시스템 공조</td><td>12회</td><td>1건</td><td>91.6%</td></tr>
-                  <tr><td>소방/보안</td><td>12회</td><td>0건</td><td>100%</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
+  </div>
 
+</div>
+
+<div class="modal-overlay" id="equipModal">
+  <div class="modal-box">
+    <div class="modal-body">
+      <h3 style="margin-bottom:15px;" id="eq-modal-title">장비 등록/수정</h3>
+      <div class="form-group"><label>장비 ID / 관리 코드</label><input type="text" id="eq-id"></div>
+      <div class="form-group"><label>장비 명칭</label><input type="text" id="eq-name"></div>
+      <div class="form-group"><label>설치 위치 구역</label>
+        <select id="eq-zone">
+          <option value="A부조정실">A부조정실</option>
+          <option value="주조정실">주조정실</option>
+          <option value="통합기계실">통합기계실</option>
+          <option value="B부조정실">B부조정실</option>
+          <option value="B기계실">B기계실</option>
+          <option value="UPS실">UPS실</option>
+        </select>
+      </div>
+      <div class="form-group"><label>시스템 대분류</label>
+        <select id="eq-cat">
+          <option value="전력">전력 인프라</option>
+          <option value="시스템">방송 시스템</option>
+          <option value="공조/소방">공조/소방 설비</option>
+        </select>
+      </div>
+      <div class="form-group"><label>현재 상태 가동 등급</label>
+        <select id="eq-status">
+          <option value="정상">정상 가동</option>
+          <option value="관찰요망">관찰 요망</option>
+          <option value="정비필요">정비 필요</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('equipModal')">취소</button>
+      <button class="btn-sm btn-blue" onclick="saveEquipData()">저장하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="evModal">
+  <div class="modal-box">
+    <div class="modal-body">
+      <h3 style="margin-bottom:15px;">점검 및 이력 정보 기록</h3>
+      <div class="form-group"><label>일자</label><input type="date" id="ev-date"></div>
+      <div class="form-group"><label>작업 구분</label>
+        <select id="ev-type">
+          <option value="정기점검">정기 점검</option>
+          <option value="긴급수리">긴급 수리</option>
+          <option value="부품교체">부품 교체</option>
+        </select>
+      </div>
+      <div class="form-group"><label>점검 확인 내용 / 증상</label><input type="text" id="ev-symptom"></div>
+      <div class="form-group"><label>조치 및 정비 결과 사항</label><textarea id="ev-action" rows="3"></textarea></div>
+      <div class="form-group"><label>점검 수행 담당자</label><input type="text" id="ev-person"></div>
+      <div class="form-group"><label>소요 정비 비용 (원)</label><input type="number" id="ev-cost" value="0"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('evModal')">취소</button>
+      <button class="btn-sm btn-blue" onclick="saveEvData()">저장등록</button>
     </div>
   </div>
 </div>
 
 <script>
-// 글로벌 변수 및 설정 마스터
-var GAS_URL = localStorage.getItem('kt_alpha_gas_url') || "";
-var currentPage = 'chk';
-var today = new Date().toISOString().split('T')[0];
-
-// 로컬 마스터 데이터 스키마 (Equipments 마스터 테이블 역할)
-var equipData = [
-  {id:"EQ-001", name:"A스튜디오 메인 카메라", model:"Sony HDC-4300", loc:"A Studio", date:"2021-03", status:"정상"},
-  {id:"EQ-002", name:"B스튜디오 서브 카메라", model:"Sony HDC-3100", loc:"B Studio", date:"2022-05", status:"정상"},
-  {id:"EQ-003", name:"메인 자막기 (Character Gen)", model:"Compix Linx7000", loc:"Master Control", date:"2020-11", status:"관찰요망"},
-  {id:"EQ-004", name:"A스튜디오 비디오 스위처", model:"Sony XVS-G1", loc:"A Studio", date:"2023-01", status:"정상"},
-  {id:"EQ-005", name:"대형 월 모니터 디스플레이", model:"Samsung VideoWall", loc:"B Studio", date:"2019-08", status:"정상"},
-  {id:"EQ-006", name:"오디오 믹싱 콘솔", model:"Calrec Brio 36", loc:"Master Control", date:"2021-07", status:"정상"}
+// 기존 장비 데이터 구조 완벽 보존
+let equipData = [
+  {id:"UPS-01", name:"주 전원 UPS 시스템 1호기", zone:"UPS실", cat:"전력", status:"정상", evs:[{date:"2026-06-10", type:"정기점검", symptom:"배터리 전압 테스트", action:"셀 밸런싱 상태 이상 무 확인", person:"홍길동", cost:0}]},
+  {id:"APC-A", name:"A부조 메인 APC 송출 엔코더", zone:"A부조정실", cat:"시스템", status:"정상", evs:[]},
+  {id:"MAT-B", name:"B부조 비디오 매트릭스 라우터", zone:"B부조정실", cat:"시스템", status:"관찰요망", evs:[{date:"2026-06-18", type:"긴급수리", symptom:"팬 소음 발생", action:"베어링 오일 주입 및 모니터링", person:"이영희", cost:15000}]},
+  {id:"HVAC-M", name:"주조정실 정밀 항온항습기", zone:"주조정실", cat:"공조/소방", status:"정상", evs:[]},
+  {id:"NAS-01", name:"방송 제작용 통합 NAS 스토리지", zone:"통합기계실", cat:"시스템", status:"정상", evs:[]},
+  {id:"FAN-B", name:"B기계실 메인 급배기 환기 시스템", zone:"B기계실", cat:"공조/소방", status:"정상", evs:[]}
 ];
 
-// 현재 화면에 선택된 단일 장비 및 해당 장비의 행 분산 로드 데이터 저장소
-var selectedEquipIdx = -1;
-var currentLoadedHistory = []; 
-var currentSev = 'low';
-var currentEvIdx = -1; // -1이면 신규 append, 0 이상이면 수정 행 타겟
-var chartInstance = null;
-
-// 일일 점검 고정 템플릿
-var chkItems = [
-  {id:1, cat:"전력", text:"UPS 입력 전압 정상 유무 (220V/380V ±10%) 상태 확인", sel:"OK", memo:""},
-  {id:2, cat:"전력", text:"바이패스 전원 공급 및 배전반 차단기 트립 외관 수시 점검", sel:"OK", memo:""},
-  {id:3, cat:"전력", text:"비상 발전기 연료 잔량(70% 이상) 및 수동 기동 전압 체크", sel:"OK", memo:""},
-  {id:4, cat:"시스템", text:"주조정실 레퍼런스 주클럭 마스터/슬레이브 동기화 위상 체크", sel:"OK", memo:""},
-  {id:5, cat:"시스템", text:"스위처 및 메인 라우터 크로스포인트 절체 테스트 상태 확인", sel:"OK", memo:""},
-  {id:6, cat:"시스템", text:"NAS 비디오 서버 스토리지 RAID 볼륨 데드볼륨 유무 모니터링", sel:"OK", memo:""},
-  {id:7, cat:"시스템", text:"송출 통합 오토메이션 인코딩 에러 및 스케줄러 덤프 확인", sel:"OK", memo:""},
-  {id:8, cat:"소방보안", text:"안전 관리 구역 소화설비 압력계 지침 정상 가이드 범위 확인", sel:"OK", memo:""},
-  {id:9, cat:"소방보안", text:"종합 통제 구역 인프라 도어락 및 데드볼트 연동 제어 상태", sel:"OK", memo:""}
+// 요청하신 총 20가지 일일점검 고정 지표 항목 정의
+const dailyCheckList = [
+  { id: 1, type: "전력", name: "UPS 배터리 전압 및 운전 상태 점검", desc: "정상 범위 내부 상태 및 경보 여부", status: "정상", class: "elec" },
+  { id: 2, type: "전력", name: "주조정실 분전반 차단기 발열 상태", desc: "열화상 카메라 혹은 육안 점검 및 트립 여부", status: "정상", class: "elec" },
+  { id: 3, type: "전력", name: "항온항습기 전원 공급 장치 이상 유무", desc: "6개 구역 전원 정상 인입 여부", status: "정상", class: "elec" },
+  { id: 4, type: "전력", name: "비상 발전기 대기 전력 및 충전기 확인", desc: "비상 기동 전압 유지 상태", status: "정상", class: "elec" },
+  { id: 5, type: "시스템", name: "송출 시스템 Main/Backup 이중화 경로", desc: "실시간 비트레이트 및 스위칭 상태 정상", status: "정상", class: "sys" },
+  { id: 6, type: "시스템", name: "A부조 APC 엔코더 및 디코더 상태", desc: "입출력 신호 누락 및 드롭 프레임 점검", status: "정상", class: "sys" },
+  { id: 7, type: "시스템", name: "B부조 비디오 매트릭스 라우터 신호", desc: "크로스포인트 오동작 및 에러 로그 체크", status: "정상", class: "sys" },
+  { id: 8, type: "시스템", name: "통합 NAS 스토리지 가용 용량 체크", desc: "디스크 잔여 용량 30% 이상 유지 확인", status: "정상", class: "sys" },
+  { id: 9, type: "시스템", name: "주조정실 레코딩 서버 채널 점검", desc: "스케줄러 연동 및 타임코드 정상 확인", status: "정상", class: "sys" },
+  { id: 10, type: "시스템", name: "통합기계실 백본 스위치 트래픽 모니터", desc: "포트별 오버플로우 및 패킷 손실 유무", status: "정상", class: "sys" },
+  { id: 11, type: "시스템", name: "라디오 마스터 클럭(GPS) 동기화 상태", desc: "표준 시각 동기 레벨 정상 여부", status: "정상", class: "sys" },
+  { id: 12, type: "시스템", name: "인터컴 시스템 기기 간 매트릭스 링크", desc: "부조-주조 간 오디오 회선 클리어 상태", status: "정상", class: "sys" },
+  { id: 13, type: "시스템", name: "오디오 콘솔 라우팅 및 페이더 연동", desc: "시그널 피크 레벨 및 디스토션 체크", status: "정상", class: "sys" },
+  { id: 14, type: "시스템", name: "CG 및 자막 가공 시스템 폰트 링크", desc: "실시간 템플릿 렌더링 엔진 상태", status: "정상", class: "sys" },
+  { id: 15, type: "공조/소방", name: "A부조정실 공조 급배기 팬 작동 점검", desc: "실내 기류 흐름 및 소음 상태 점검", status: "정상", class: "safe" },
+  { id: 16, type: "공조/소방", name: "주조정실 항온항습기 누수 여부", desc: "바닥 드레인 라인 및 응축수 트랩 점검", status: "관찰요망", class: "safe" },
+  { id: 17, type: "공조/소방", name: "통합기계실 정밀 공조기 냉매 압력", desc: "고저압 게이지 정상 범위 안착 확인", status: "정상", class: "safe" },
+  { id: 18, type: "공조/소방", name: "B기계실 환기 댐퍼 연동 개폐 상태", desc: "자동 설정 온도 동작 유무", status: "정상", class: "safe" },
+  { id: 19, type: "공조/소방", name: "UPS실 가스계 소화설비 압력 게이지", desc: "약제 방출 압력 지시계 녹색 구간 확인", status: "정상", class: "safe" },
+  { id: 20, type: "공조/소방", name: "방화구획 패널 및 기계실 출입문 통제", desc: "시큐리티 락 및 소방 통로 확보 상태", status: "정상", class: "safe" }
 ];
 
-window.onload = function() {
-  document.getElementById('chk-date').value = today;
-  document.getElementById('ev-date').value = today;
-  document.getElementById('setting-url').value = GAS_URL;
-  
-  if(!GAS_URL) {
-    setBarState('error', '경고: 구글 시트 API URL 설정이 비어 있습니다. 우측 ⚙️ 버튼을 눌러 연동 주소를 기입해 주세요.');
-  }
-  
-  initDailyCheckList();
-  renderEquipList();
-  updateStats();
-};
+let selectedEquipIdx = -1;
+let currentEvIdx = -1;
+let chartInstance = null;
+let currentChartMode = 'temp';
 
-// 동적 데이터바 상태 처리기
-function setBarState(state, msg) {
-  var bar = document.getElementById('db-bar');
-  var dot = document.getElementById('db-dot');
-  var msgBox = document.getElementById('db-msg');
+function switchView(viewName) {
+  document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   
-  bar.className = "data-bar " + state;
-  dot.className = "db-dot " + (state==='ok'?'dot-g':state==='dirty'?'dot-y':state==='loading'?'dot-b':'dot-r');
-  msgBox.innerText = msg;
-}
-
-function openSetting() { document.getElementById('settingModal').classList.add('open'); }
-function saveSetting() {
-  var url = document.getElementById('setting-url').value.trim();
-  localStorage.setItem('kt_alpha_gas_url', url);
-  GAS_URL = url;
-  closeModal('settingModal');
-  if(url) {
-    setBarState('ok', '구글 시트 연동 주소가 저장되었습니다. 분산 처리가 가동됩니다.');
-  } else {
-    setBarState('error', 'URL이 유효하지 않습니다.');
-  }
-}
-
-function switchPage(p) {
-  currentPage = p;
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('on'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('p-'+p).classList.add('on');
-  document.getElementById('mi-'+p).classList.add('active');
-  
-  if(p === 'chk') {
-    document.getElementById('bar-title').innerText = "일일 정기 점검 기록";
-  } else if(p === 'equip') {
-    document.getElementById('bar-title').innerText = "방송 인프라 장비 이력 분산 관리";
-    renderEquipList();
-  } else if(p === 'dash') {
-    document.getElementById('bar-title').innerText = "종합 데이터 분석 통계";
+  if(viewName === 'dash') {
+    document.getElementById('view-dash').classList.add('active');
+    document.getElementById('nav-dash').classList.add('active');
     initDashboard();
-  }
-}
-
-// --- 일일 점검 처리부 (탭 분할 누적 저장) ---
-function initDailyCheckList() {
-  var container = document.getElementById('chk-container');
-  container.innerHTML = "";
-  
-  var currentCat = "";
-  var block = null;
-  
-  chkItems.forEach((item, idx) => {
-    if(item.cat !== currentCat) {
-      currentCat = item.cat;
-      block = document.createElement('div');
-      block.className = "cat-block";
-      var lbl = currentCat === "전력" ? "⚡ 전력 공급 인프라 단원" : currentCat === "시스템" ? "🖥️ 방송 연동 시스템 단원" : "🛡️ 소방 및 재해 보안 시스템";
-      var cls = currentCat === "전력" ? "cat-elec" : currentCat === "시스템" ? "cat-sys" : "cat-safe";
-      block.innerHTML = `<div class="cat-header ${cls}">${lbl}</div>`;
-      container.appendChild(block);
-    }
-    
-    var div = document.createElement('div');
-    div.className = "chk-item checked";
-    div.id = "ci-" + idx;
-    div.innerHTML = `
-      <input type="checkbox" class="chk-cb" checked onchange="toggleCB(${idx})">
-      <div class="chk-text">${item.text}</div>
-      <select class="chk-sel" onchange="changeSel(${idx}, this.value)">
-        <option value="OK">정상(OK)</option>
-        <option value="WARN">요관찰(WARN)</option>
-        <option value="ERR">이상발견(ERR)</option>
-      </select>
-      <button class="memo-btn" onclick="toggleMemo(${idx})">📝 메모</button>
-      <div class="memo-area" id="ma-${idx}" style="display:none; width:100%;">
-        <textarea placeholder="특이사항 세부 내용을 입력하세요" oninput="changeMemo(${idx}, this.value)"></textarea>
-      </div>
-    `;
-    block.appendChild(div);
-  });
-  calcProgress();
-}
-
-function toggleCB(idx) {
-  var div = document.getElementById('ci-'+idx);
-  var cb = div.querySelector('.chk-cb');
-  if(cb.checked) {
-    div.classList.add('checked');
-    changeSel(idx, div.querySelector('.chk-sel').value);
   } else {
-    div.classList.remove('checked', 'has-error');
-  }
-  calcProgress();
-}
-
-function changeSel(idx, val) {
-  chkItems[idx].sel = val;
-  var div = document.getElementById('ci-'+idx);
-  if(val === 'ERR') {
-    div.classList.add('has-error');
-  } else {
-    div.classList.remove('has-error');
+    document.getElementById('view-equip').classList.add('active');
+    document.getElementById('nav-equip').classList.add('active');
+    renderEquipList();
   }
 }
 
-function changeMemo(idx, val) { chkItems[idx].memo = val; }
-function toggleMemo(idx) {
-  var area = document.getElementById('ma-'+idx);
-  area.style.display = area.style.display === 'none' ? 'block' : 'none';
-}
-
-function calcProgress() {
-  var total = chkItems.length;
-  var checked = 0;
-  document.querySelectorAll('.chk-cb').forEach(cb => { if(cb.checked) checked++; });
-  var pct = Math.round((checked/total)*100);
-  document.getElementById('p-pct').innerText = pct + "%";
-  document.getElementById('p-bar').style.width = pct + "%";
-}
-
-function valTH(zone) {
-  var t = parseFloat(document.getElementById('th-'+zone+'-t').value);
-  var h = parseFloat(document.getElementById('th-'+zone+'-h').value);
-  var dot = document.getElementById('zd-'+zone);
-  
-  if(t >= 18 && t <= 25 && h >= 30 && h <= 60) {
-    dot.className = "zdot ok";
-  } else {
-    dot.className = "zdot warn";
-  }
-}
-
-// [개선] 일일점검 마스터와 상세요소를 분할해서 구글시트 행 단위 누적 추가(Append)
-function submitDailyCheck() {
-  if(!GAS_URL) { alert("설정에서 구글 Apps Script Web App URL을 먼저 기입하세요."); return; }
-  
-  var master = {
-    date: document.getElementById('chk-date').value,
-    shift: document.getElementById('chk-shift').value,
-    person: document.getElementById('chk-worker').value.trim(),
-    th_A: document.getElementById('th-A-t').value + "°C / " + document.getElementById('th-A-h').value + "%",
-    th_B: document.getElementById('th-B-t').value + "°C / " + document.getElementById('th-B-h').value + "%",
-    th_M: document.getElementById('th-M-t').value + "°C / " + document.getElementById('th-M-h').value + "%"
-  };
-  
-  if(!master.person) { alert("책임 점검자 이름을 입력해 주세요."); return; }
-  
-  var details = [];
-  chkItems.forEach((item, idx) => {
-    var cb = document.getElementById('ci-'+idx).querySelector('.chk-cb');
-    if(cb.checked) {
-      details.push({
-        cat: item.cat,
-        text: item.text,
-        result: item.sel,
-        memo: item.memo
-      });
-    }
-  });
-
-  setBarState('loading', '구글 시트 탭 분산 전송 중... (DailyChecks & CheckDetails 배분)');
-  
-  fetch(GAS_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({
-      action: "saveDailyCheck",
-      master: master,
-      details: details
-    })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if(res.result === "success") {
-      setBarState('ok', '일일 점검 결과가 분산 탭 테이블 구조에 한 줄씩 정상 누적 추가되었습니다.');
-      alert("구글 시트에 행 단위 분산 저장이 완료되었습니다.");
-    } else {
-      setBarState('error', '제출 실패: ' + res.error);
-    }
-  })
-  .catch(err => {
-    setBarState('error', '네트워크 연동 실패: ' + err.toString());
-  });
-}
-
-
-// --- 방송 장비 및 수리 이력 분산 처리부 (핵심 개선반) ---
+// 기존 장비 리스트 및 뷰 기능 로직 보존
 function renderEquipList() {
-  var box = document.getElementById('eq-list-box');
-  box.innerHTML = `<div class="equip-list-head"><span class="equip-list-title">장비 자산 목록</span></div>`;
+  const container = document.getElementById('equip-list-container');
+  container.innerHTML = '';
   
   equipData.forEach((eq, idx) => {
-    var item = document.createElement('div');
-    item.className = "equip-list-item" + (idx === selectedEquipIdx ? " active" : "");
-    item.onclick = function() { selectEquip(idx); };
+    const div = document.createElement('div');
+    div.className = `equip-item ${selectedEquipIdx === idx ? 'selected' : ''}`;
+    div.onclick = () => selectEquip(idx);
     
-    var bCls = eq.status==='정상'?'b-ok':eq.status==='관찰요망'?'b-warn':'b-err';
-    item.innerHTML = `
-      <div>
-        <div class="eli-name">${eq.name}</div>
-        <div class="eli-sub">${eq.model} | ${eq.loc}</div>
+    let tagClass = eq.status === '정상' ? 'ok' : (eq.status === '관찰요망' ? 'warn' : 'err');
+    
+    div.innerHTML = `
+      <div class="top-line">
+        <span class="eq-name">${eq.name}</span>
+        <span class="status-tag ${tagClass}">${eq.status}</span>
       </div>
-      <div class="eli-right">
-        <span class="badge ${bCls}">${eq.status}</span>
-        <span style="font-size:9px;color:var(--faint);">${eq.id}</span>
-      </div>
+      <div class="eq-info">[${eq.cat}] ${eq.id} · ${eq.zone}</div>
     `;
-    box.appendChild(item);
+    container.appendChild(div);
   });
+  updateGlobalStats();
 }
 
-// [개선] 특정 장비를 선택하면 전체를 로드하지 않고 그 장비에 속한 행(Row)만 가볍게 라우팅 쿼리
 function selectEquip(idx) {
   selectedEquipIdx = idx;
   renderEquipList();
   
-  var eq = equipData[idx];
-  var panel = document.getElementById('eq-panel-box');
-  panel.innerHTML = `
-    <div class="panel-head">
-      <div>
-        <div class="panel-equip-name">${eq.name} <span style="font-size:12px;color:var(--muted);font-weight:normal;margin-left:6px;">[자산코드: ${eq.id}]</span></div>
-        <div class="panel-equip-meta">모델: ${eq.model} | 위치: ${eq.loc} | 도입시기: ${eq.date}</div>
-      </div>
-      <div class="panel-head-actions">
-        <button class="btn-ghost btn-sm" onclick="openEvModal(-1)">＋ 신규 이력 등록</button>
-      </div>
-    </div>
-    <div class="panel-body">
-      <div class="section-label">정비 및 고장 대응 기록 타임라인 (구글 시트 실시간 행 필터링)</div>
-      <div id="timeline-loading" style="padding:20px; text-align:center; color:var(--muted); font-size:12px;">
-        🔄 이 장비 전용 수리이력 레코드를 구글시트 'RepairHistory' 탭에서 한 줄씩 검색 매칭 중...
-      </div>
-      <div class="timeline" id="panel-timeline" style="display:none;"></div>
-    </div>
-  `;
-  
-  if(!GAS_URL) {
-    document.getElementById('timeline-loading').innerText = "⚠️ API 주소가 지정되지 않아 모의 테스트 오프라인 상태입니다.";
-    currentLoadedHistory = [];
-    renderTimeline([]);
+  if(idx < 0) {
+    document.getElementById('detail-actions').style.display = 'none';
+    document.getElementById('ev-table').style.display = 'none';
+    document.getElementById('ev-empty-msg').style.display = 'block';
     return;
   }
   
-  // 가벼운 GET 쿼리 발송
-  fetch(`${GAS_URL}?action=getRepairHistory&equipId=${eq.id}`)
-    .then(res => res.json())
-    .then(data => {
-      currentLoadedHistory = data;
-      document.getElementById('timeline-loading').style.display = 'none';
-      document.getElementById('panel-timeline').style.display = 'block';
-      renderTimeline(data);
-    })
-    .catch(err => {
-      document.getElementById('timeline-loading').innerText = "❌ 데이터 조회 실패: " + err.toString();
-    });
-}
-
-function renderTimeline(list) {
-  var container = document.getElementById('panel-timeline');
-  container.innerHTML = "";
+  const eq = equipData[idx];
+  document.getElementById('det-name').innerText = eq.name;
+  document.getElementById('det-meta').innerText = `코드: ${eq.id} | 분류: ${eq.cat} | 위치: ${eq.zone} | 상시태그: ${eq.status}`;
+  document.getElementById('detail-actions').style.display = 'flex';
   
-  if(!list || list.length === 0) {
-    container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--faint);font-size:13px;">등록된 정비 이력 및 특이사항 행이 없습니다.</div>`;
-    return;
-  }
+  const tbody = document.getElementById('ev-tbody');
+  tbody.innerHTML = '';
   
-  // 날짜 역순 정렬
-  list.sort((a,b) => b.date.localeCompare(a.date));
-  
-  list.forEach((ev, idx) => {
-    var dotCls = ev.sev === 'high' ? 'dot-high' : ev.sev === 'mid' ? 'dot-mid' : 'dot-low';
-    var bCls = ev.result === '완료' ? 'b-ok' : ev.result === '임시조치' ? 'b-warn' : 'b-err';
-    
-    var item = document.createElement('div');
-    item.className = "tl-item";
-    item.innerHTML = `
-      <div class="tl-dot ${dotCls}"></div>
-      <div class="tl-card" id="tlc-${idx}">
-        <div class="tl-row" onclick="toggleTlDetail(${idx})">
-          <div class="tl-date">${ev.date}</div>
-          <div class="tl-title">${ev.symptom || ev.action}</div>
-          <div class="tl-tags">
-            <span class="badge b-blue">${ev.type}</span>
-            <span class="badge ${bCls}">${ev.result}</span>
-            <span class="tl-toggle" id="tlt-${idx}">▼</span>
-          </div>
-          <div class="tl-actions" onclick="event.stopPropagation()">
-            <button class="btn-icon edit" onclick="openEvModal(${idx})">✏️</button>
-            <button class="btn-icon del" onclick="deleteEv(${idx})">🗑️</button>
-          </div>
-        </div>
-        <div class="tl-detail" id="tld-${idx}">
-          <div class="detail-grid">
-            <div class="detail-item"><div class="dl">담당자</div><div class="dv">${ev.person || '-'}</div></div>
-            <div class="detail-item"><div class="dl">외주업체 / 자산 부품</div><div class="dv">${ev.vendor || '자체'} / ${ev.parts || '없음'}</div></div>
-            <div class="detail-item"><div class="dl">소요 비용</div><div class="dv">${(ev.cost || 0).toLocaleString()} 원</div></div>
-            <div class="detail-item"><div class="dl">중요도 레이팅</div><div class="dv" style="text-transform:uppercase; font-weight:700;">${ev.sev}</div></div>
-          </div>
-          <div class="detail-full"><div class="dl">상세 발견 원인 및 내용</div><div class="dv">${ev.desc || '상세 내용이 기록되지 않았습니다.'}</div></div>
-          <div class="detail-full"><div class="dl">정비 및 조치 내역 상세</div><div class="dv">${ev.action || '-'}</div></div>
-          ${ev.followup ? `<div class="followup-box"><strong>후속 조치 계획:</strong> ${ev.followup}</div>` : ''}
-        </div>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-}
-
-function toggleTlDetail(idx) {
-  var card = document.getElementById('tlc-'+idx);
-  var detail = document.getElementById('tld-'+idx);
-  var toggle = document.getElementById('tlt-'+idx);
-  
-  if(detail.classList.contains('open')) {
-    card.classList.remove('open');
-    detail.classList.remove('open');
-    toggle.classList.remove('open');
+  if(eq.evs.length === 0) {
+    document.getElementById('ev-table').style.display = 'none';
+    document.getElementById('ev-empty-msg').style.display = 'block';
   } else {
-    card.classList.add('open');
-    detail.classList.add('open');
-    toggle.classList.add('open');
+    document.getElementById('ev-table').style.display = 'table';
+    document.getElementById('ev-empty-msg').style.display = 'none';
+    
+    eq.evs.forEach((ev, eIdx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${ev.date}</td>
+        <td><span class="badge sys">${ev.type}</span></td>
+        <td><b>${ev.symptom}</b></td>
+        <td>${ev.action}</td>
+        <td>${ev.person}</td>
+        <td>${ev.cost.toLocaleString()}원</td>
+        <td style="text-align:center;">
+          <button class="btn-sm" onclick="openEvModal(${eIdx})">수정</button>
+          <button class="btn-sm" style="color:var(--err);" onclick="deleteEvData(${eIdx})">삭제</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
   }
 }
 
-function openEvModal(idx) {
-  currentEvIdx = idx;
-  setSev('low');
-  
+// 장비 팝업 관리 함수들
+function openEquipModal(idx) {
   if(idx >= 0) {
-    var ev = currentLoadedHistory[idx];
-    document.getElementById('modal-ev-title').innerText = "이력 레코드 수정 (행 갱신)";
+    const eq = equipData[idx];
+    document.getElementById('eq-id').value = eq.id;
+    document.getElementById('eq-name').value = eq.name;
+    document.getElementById('eq-zone').value = eq.zone;
+    document.getElementById('eq-cat').value = eq.cat;
+    document.getElementById('eq-status').value = eq.status;
+    document.getElementById('eq-modal-title').innerText = "장비 사양 수정";
+  } else {
+    document.getElementById('eq-id').value = "";
+    document.getElementById('eq-name').value = "";
+    document.getElementById('eq-modal-title').innerText = "신규 장비 등록";
+  }
+  document.getElementById('equipModal').classList.add('open');
+}
+
+function editCurrentEquip() {
+  if(selectedEquipIdx >= 0) openEquipModal(selectedEquipIdx);
+}
+
+function saveEquipData() {
+  const id = document.getElementById('eq-id').value;
+  const name = document.getElementById('eq-name').value;
+  if(!id || !name) return alert("필수 항목을 적어주세요.");
+  
+  const obj = {
+    id: id, name: name,
+    zone: document.getElementById('eq-zone').value,
+    cat: document.getElementById('eq-cat').value,
+    status: document.getElementById('eq-status').value,
+    evs: selectedEquipIdx >= 0 ? equipData[selectedEquipIdx].evs : []
+  };
+  
+  if(selectedEquipIdx >= 0) {
+    equipData[selectedEquipIdx] = obj;
+  } else {
+    equipData.push(obj);
+    selectedEquipIdx = equipData.length - 1;
+  }
+  closeModal('equipModal');
+  renderEquipList();
+  selectEquip(selectedEquipIdx);
+}
+
+// 이력 모달 관리 함수들
+function openEvModal(eIdx) {
+  currentEvIdx = eIdx;
+  if(eIdx >= 0 && selectedEquipIdx >= 0) {
+    const ev = equipData[selectedEquipIdx].evs[eIdx];
     document.getElementById('ev-date').value = ev.date;
     document.getElementById('ev-type').value = ev.type;
-    document.getElementById('ev-person').value = ev.person || "";
-    document.getElementById('ev-symptom').value = ev.symptom || "";
-    document.getElementById('ev-desc').value = ev.desc || "";
-    document.getElementById('ev-parts').value = ev.parts || "";
-    document.getElementById('ev-vendor').value = ev.vendor || "";
-    document.getElementById('ev-cost').value = ev.cost || 0;
-    document.getElementById('ev-action').value = ev.action || "";
-    document.getElementById('ev-result').value = ev.result;
-    document.getElementById('ev-followup').value = ev.followup || "";
-    setSev(ev.sev || 'low');
+    document.getElementById('ev-symptom').value = ev.symptom;
+    document.getElementById('ev-action').value = ev.action;
+    document.getElementById('ev-person').value = ev.person;
+    document.getElementById('ev-cost').value = ev.cost;
   } else {
-    document.getElementById('modal-ev-title').innerText = "새로운 인프라 정비 행(Row) 추가";
-    document.getElementById('ev-date').value = today;
-    document.getElementById('ev-type').selectedIndex = 0;
-    document.getElementById('ev-person').value = "";
+    document.getElementById('ev-date').value = new Date().toISOString().substring(0,10);
     document.getElementById('ev-symptom').value = "";
-    document.getElementById('ev-desc').value = "";
-    document.getElementById('ev-parts').value = "";
-    document.getElementById('ev-vendor').value = "";
-    document.getElementById('ev-cost').value = 0;
     document.getElementById('ev-action').value = "";
-    document.getElementById('ev-result').selectedIndex = 0;
-    document.getElementById('ev-followup').value = "";
+    document.getElementById('ev-person').value = "";
+    document.getElementById('ev-cost').value = 0;
   }
-  
   document.getElementById('evModal').classList.add('open');
 }
 
-function setSev(s) {
-  currentSev = s;
-  document.querySelectorAll('.sev-btn').forEach(b => b.className = "sev-btn");
-  document.getElementById('sb-'+s).classList.add('sel-'+s);
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// [개선] 이력을 저장할 때 거대 구조를 다 보내지 않고 이번 입력 레코드만 GAS에 쏘아 appendRow 유도
-function saveEv() {
+function saveEvData() {
   if(selectedEquipIdx < 0) return;
-  if(!GAS_URL) { alert("설정 연동 URL이 기입되어 있어야 구글시트에 단일 행 적재가 가능합니다."); return; }
-  
-  var targetEquip = equipData[selectedEquipIdx];
-  
-  var ev = {
-    id: currentEvIdx >= 0 ? currentLoadedHistory[currentEvIdx].id : "REV-" + new Date().getTime(),
-    equipId: targetEquip.id,
-    date: document.getElementById('ev-date').value || today,
+  const ev = {
+    date: document.getElementById('ev-date').value,
     type: document.getElementById('ev-type').value,
-    person: document.getElementById('ev-person').value.trim(),
-    symptom: document.getElementById('ev-symptom').value.trim(),
-    desc: document.getElementById('ev-desc').value.trim(),
-    sev: currentSev || 'low',
-    parts: document.getElementById('ev-parts').value.trim(),
-    vendor: document.getElementById('ev-vendor').value.trim(),
-    cost: parseInt(document.getElementById('ev-cost').value) || 0,
-    action: document.getElementById('ev-action').value.trim(),
-    result: document.getElementById('ev-result').value,
-    followup: document.getElementById('ev-followup').value.trim()
+    symptom: document.getElementById('ev-symptom').value,
+    action: document.getElementById('ev-action').value,
+    person: document.getElementById('ev-person').value,
+    cost: parseInt(document.getElementById('ev-cost').value) || 0
   };
   
-  if(!ev.symptom && !ev.action) { alert('증상 요약 또는 조치 내용을 입력해 주세요.'); return; }
-  
-  setBarState('loading', '구글 시트 RepairHistory 탭에 레코드 반영 중...');
-  
-  fetch(GAS_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({
-      action: "saveRepair",
-      isEdit: currentEvIdx >= 0,
-      data: ev
-    })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if(res.result === "success") {
-      closeModal('evModal');
-      setBarState('ok', '정비 내역 한 줄이 구글시트 DB에 즉각 업데이트되었습니다.');
-      // 변경 요소가 수립되었으므로 해당 장비를 다시 강제 쿼리 로드
-      selectEquip(selectedEquipIdx);
-      updateStats();
-    } else {
-      setBarState('error', '행 저장 실패: ' + res.error);
-    }
-  })
-  .catch(err => {
-    setBarState('error', '네트워크 연동 실패: ' + err.toString());
-  });
-}
-
-// [개선] 삭제 역시 지정 행ID를 기반으로 타겟 로우 소거 명령 전송
-function deleteEv(idx) {
-  if(!GAS_URL) { alert("연동 주소가 세팅되어 있지 않습니다."); return; }
-  var ev = currentLoadedHistory[idx];
-  
-  document.getElementById('confirm-msg-text').innerText = `[${ev.date}] [${ev.type}] 정비 내역 고유행을 구글시트에서 삭제하시겠습니까?`;
-  document.getElementById('confirmModal').classList.add('open');
-  
-  document.getElementById('confirm-ok-btn').onclick = function() {
-    closeModal('confirmModal');
-    setBarState('loading', '구글 시트에서 타겟 행(Row) 탐색 및 소거 진행 중...');
-    
-    fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        action: "deleteRepair",
-        id: ev.id
-      })
-    })
-    .then(res => res.json())
-    .then(res => {
-      if(res.result === "success") {
-        setBarState('ok', '구글 시트 내의 정비 이력 로우가 완전히 삭제되었습니다.');
-        selectEquip(selectedEquipIdx);
-        updateStats();
-      } else {
-        setBarState('error', '삭제 처리 실패: ' + res.error);
-      }
-    })
-    .catch(err => {
-      setBarState('error', '네트워크 연동 에러: ' + err.toString());
-    });
-  };
-}
-
-// --- 공통 연동부 및 대시보드 ---
-function reloadData() {
-  if(selectedEquipIdx >= 0) {
-    selectEquip(selectedEquipIdx);
+  if(currentEvIdx >= 0) {
+    equipData[selectedEquipIdx].evs[currentEvIdx] = ev;
   } else {
-    alert("조회 중인 단일 장비가 없습니다. 장비를 선택하면 구글시트에서 실시간으로 탭 정보를 긁어옵니다.");
+    equipData[selectedEquipIdx].evs.push(ev);
+  }
+  closeModal('evModal');
+  selectEquip(selectedEquipIdx);
+}
+
+function deleteEvData(eIdx) {
+  if(confirm("해당 점검 수리 이력을 삭제하시겠습니까?") && selectedEquipIdx >= 0) {
+    equipData[selectedEquipIdx].evs.splice(eIdx, 1);
+    selectEquip(selectedEquipIdx);
   }
 }
 
-function updateStats() {
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function updateGlobalStats() {
   document.getElementById('st-total').innerText = equipData.length;
-  var normal = 0, warn = 0;
+  let okCnt = 0, warnCnt = 0;
   equipData.forEach(e => {
-    if(e.status==='정상') normal++;
-    else if(e.status==='관찰요망') warn++;
+    if(e.status === '정상') okCnt++;
+    else warnCnt++;
   });
-  document.getElementById('st-active').innerText = normal;
-  document.getElementById('st-warn').innerText = warn;
-  document.getElementById('st-repair').innerText = "4"; // 목업 통계
+  document.getElementById('st-active').innerText = okCnt;
+  document.getElementById('st-warn').innerText = warnCnt;
+}
+
+// 최근 7일 온습도 통계 그래프 데이터 제어 로직 
+function toggleChartMode(mode) {
+  currentChartMode = mode;
+  document.getElementById('bm-chart-temp').classList.toggle('active', mode === 'temp');
+  document.getElementById('bm-chart-hum').classList.toggle('active', mode === 'hum');
+  updateChartData();
+}
+
+function updateChartData() {
+  if(!chartInstance) return;
+  const labels = ['06/16', '06/17', '06/18', '06/19', '06/20', '06/21', '06/22(오늘)'];
+  
+  const chartData = {
+    temp: {
+      a: [22.1, 22.3, 22.0, 22.4, 22.6, 22.2, 22.5],
+      main: [21.5, 21.7, 21.6, 21.9, 21.8, 22.0, 21.8],
+      tm: [20.2, 20.4, 20.3, 20.6, 20.5, 20.7, 20.5],
+      b: [22.8, 22.9, 23.0, 23.2, 23.1, 22.9, 23.1],
+      bm: [22.4, 22.5, 22.7, 22.6, 22.8, 22.7, 22.8],
+      ups: [20.8, 21.0, 20.9, 21.1, 21.2, 21.0, 21.0]
+    },
+    hum: {
+      a: [44, 45, 43, 46, 45, 44, 45],
+      main: [41, 42, 43, 41, 42, 43, 42],
+      tm: [39, 40, 41, 40, 39, 41, 40],
+      b: [43, 44, 45, 43, 44, 45, 44],
+      bm: [45, 46, 44, 45, 47, 46, 46],
+      ups: [37, 38, 39, 38, 37, 38, 38]
+    }
+  };
+
+  const currentSet = chartData[currentChartMode];
+  const unit = currentChartMode === 'temp' ? '°C' : '%';
+  
+  chartInstance.data.labels = labels;
+  chartInstance.data.datasets = [
+    { label: 'A부조정실', data: currentSet.a, borderColor: '#1D6FA4', tension: 0.1, fill: false },
+    { label: '주조정실', data: currentSet.main, borderColor: '#059669', tension: 0.1, fill: false },
+    { label: '통합기계실', data: currentSet.tm, borderColor: '#D97706', tension: 0.1, fill: false },
+    { label: 'B부조정실', data: currentSet.b, borderColor: '#7C3AED', tension: 0.1, fill: false },
+    { label: 'B기계실', data: currentSet.bm, borderColor: '#EC4899', tension: 0.1, fill: false },
+    { label: 'UPS실', data: currentSet.ups, borderColor: '#6B7280', tension: 0.1, fill: false }
+  ];
+  chartInstance.options.scales.y.title.text = `단위 (${unit})`;
+  chartInstance.update();
 }
 
 function initDashboard() {
-  // 모니터 수치 덤프 반영
-  document.getElementById('av-at').innerText = "22.5 °C";
-  document.getElementById('av-ah').innerText = "45 %";
-  document.getElementById('av-bt').innerText = "23.1 °C";
-  document.getElementById('av-bh').innerText = "42 %";
-  document.getElementById('av-mt').innerText = "21.8 °C";
-  document.getElementById('av-mh').innerText = "48 %";
+  updateGlobalStats();
   
+  // 20개 항목 리스트 바인딩
+  const tbody = document.getElementById('dash-checklist-tbody');
+  tbody.innerHTML = '';
+  dailyCheckList.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${item.id}</td>
+      <td><span class="badge ${item.class}">${item.type}</span></td>
+      <td><b>${item.name}</b></td>
+      <td style="color:var(--muted);">${item.desc}</td>
+      <td style="text-align:center;"><span class="status-tag ${item.status==='정상'?'ok':'warn'}">${item.status}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
   var ctx = document.getElementById('dashChart').getContext('2d');
   if(chartInstance) chartInstance.destroy();
   
   chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['06/16', '06/17', '06/18', '06/19', '06/20', '06/21', '06/22(오늘)'],
-      datasets: [
-        {
-          label: '정기점검 건수',
-          data: [1, 2, 1, 1, 3, 1, 2],
-          backgroundColor: 'rgba(29, 111, 164, 0.7)'
-        },
-        {
-          label: '긴급 정비 수리',
-          data: [0, 1, 0, 2, 0, 0, 1],
-          backgroundColor: 'rgba(208, 2, 27, 0.7)'
-        }
-      ]
-    },
+    type: 'line',
+    data: { labels: [], datasets: [] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+      plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 11 } } } },
+      scales: { x: { grid: { display: false } }, y: { title: { display: true }, grid: { color: '#F1F1F1' } } }
     }
   });
+  updateChartData();
 }
+
+window.onload = function() {
+  initDashboard();
+};
 </script>
 </body>
 </html>
