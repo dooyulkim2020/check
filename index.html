@@ -335,24 +335,45 @@ tr:hover td{background:var(--bg)}
         
         <div class="zone-grid">
           <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-A"></span>A Studio 환경</div>
+            <div class="zone-title"><span class="zdot ok" id="zd-AP"></span>A 부조정실</div>
             <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="22.5" id="th-A-t" oninput="valTH('A')"></div>
-              <div><label>습도 (%)</label><input type="text" value="45" id="th-A-h" oninput="valTH('A')"></div>
+              <div><label>온도 (°C)</label><input type="text" value="22.5" id="th-AP-t" oninput="valTH('AP')"></div>
+              <div><label>습도 (%)</label><input type="text" value="45" id="th-AP-h" oninput="valTH('AP')"></div>
             </div>
           </div>
           <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-B"></span>B Studio 환경</div>
+            <div class="zone-title"><span class="zdot ok" id="zd-MC"></span>주조정실</div>
             <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="23.1" id="th-B-t" oninput="valTH('B')"></div>
-              <div><label>습도 (%)</label><input type="text" value="42" id="th-B-h" oninput="valTH('B')"></div>
+              <div><label>온도 (°C)</label><input type="text" value="22.0" id="th-MC-t" oninput="valTH('MC')"></div>
+              <div><label>습도 (%)</label><input type="text" value="45" id="th-MC-h" oninput="valTH('MC')"></div>
             </div>
           </div>
           <div class="zone-card">
-            <div class="zone-title"><span class="zdot ok" id="zd-M"></span>조정실 주 장비실</div>
+            <div class="zone-title"><span class="zdot ok" id="zd-MR"></span>통합기계실</div>
             <div class="zone-inputs">
-              <div><label>온도 (°C)</label><input type="text" value="21.8" id="th-M-t" oninput="valTH('M')"></div>
-              <div><label>습도 (%)</label><input type="text" value="48" id="th-M-h" oninput="valTH('M')"></div>
+              <div><label>온도 (°C)</label><input type="text" value="21.8" id="th-MR-t" oninput="valTH('MR')"></div>
+              <div><label>습도 (%)</label><input type="text" value="48" id="th-MR-h" oninput="valTH('MR')"></div>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-BP"></span>B 부조정실</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="23.1" id="th-BP-t" oninput="valTH('BP')"></div>
+              <div><label>습도 (%)</label><input type="text" value="42" id="th-BP-h" oninput="valTH('BP')"></div>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-BM"></span>B 기계실</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="22.3" id="th-BM-t" oninput="valTH('BM')"></div>
+              <div><label>습도 (%)</label><input type="text" value="46" id="th-BM-h" oninput="valTH('BM')"></div>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-title"><span class="zdot ok" id="zd-UP"></span>UPS실</div>
+            <div class="zone-inputs">
+              <div><label>온도 (°C)</label><input type="text" value="21.5" id="th-UP-t" oninput="valTH('UP')"></div>
+              <div><label>습도 (%)</label><input type="text" value="50" id="th-UP-h" oninput="valTH('UP')"></div>
             </div>
           </div>
         </div>
@@ -396,10 +417,13 @@ tr:hover td{background:var(--bg)}
           </div>
           <div class="card">
             <div class="section-label">종합 온습도 평균 모니터링</div>
-            <div class="avg-grid" style="margin-bottom:14px">
-              <div class="avg-card"><div class="az">A 스튜디오</div><div class="at" id="av-at">-</div><div class="ah" id="av-ah">-</div></div>
-              <div class="avg-card"><div class="az">B 스튜디오</div><div class="at" id="av-bt">-</div><div class="ah" id="av-bh">-</div></div>
-              <div class="avg-card"><div class="az">주 조정실</div><div class="at" id="av-mt">-</div><div class="ah" id="av-mh">-</div></div>
+            <div class="avg-grid" style="margin-bottom:14px;grid-template-columns:repeat(3,1fr)">
+              <div class="avg-card"><div class="az">A 부조정실</div><div class="at" id="av-apt">-</div><div class="ah" id="av-aph">-</div></div>
+              <div class="avg-card"><div class="az">주조정실</div><div class="at" id="av-mct">-</div><div class="ah" id="av-mch">-</div></div>
+              <div class="avg-card"><div class="az">통합기계실</div><div class="at" id="av-mrt">-</div><div class="ah" id="av-mrh">-</div></div>
+              <div class="avg-card"><div class="az">B 부조정실</div><div class="at" id="av-bpt">-</div><div class="ah" id="av-bph">-</div></div>
+              <div class="avg-card"><div class="az">B 기계실</div><div class="at" id="av-bmt">-</div><div class="ah" id="av-bmh">-</div></div>
+              <div class="avg-card"><div class="az">UPS실</div><div class="at" id="av-upt">-</div><div class="ah" id="av-uph">-</div></div>
             </div>
             <div class="section-label">종합 인프라 가동 통계</div>
             <div class="table-wrap">
@@ -412,6 +436,33 @@ tr:hover td{background:var(--bg)}
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="section-label" style="margin:0">일일 점검 이력 (구글 시트 DailyChecks 연동)</div>
+            <div class="flt-row" style="margin:0">
+              <input type="date" id="hist-from" style="padding:4px 8px;border:1px solid var(--border-dark);border-radius:6px;font-size:11px;color:var(--text)">
+              <span style="color:var(--muted);font-size:11px">~</span>
+              <input type="date" id="hist-to" style="padding:4px 8px;border:1px solid var(--border-dark);border-radius:6px;font-size:11px;color:var(--text)">
+              <button class="btn-ghost btn-sm" onclick="filterDailyHistory()">검색</button>
+              <button class="btn-ghost btn-sm" onclick="loadDailyHistory()">전체</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="daily-hist-table">
+              <thead>
+                <tr>
+                  <th>점검일자</th><th>번차</th><th>점검자</th>
+                  <th>A부조정실</th><th>주조정실</th><th>통합기계실</th>
+                  <th>B부조정실</th><th>B기계실</th><th>UPS실</th>
+                  <th style="text-align:center">점검항목</th><th style="text-align:center">ERR</th><th style="text-align:center">WARN</th>
+                </tr>
+              </thead>
+              <tbody id="daily-hist-body">
+                <tr><td colspan="12" style="text-align:center;color:var(--faint);padding:24px;">구글 시트 연동 후 이력이 표시됩니다.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -435,17 +486,31 @@ var currentEvIdx = -1;
 var currentSelectedEquipId = null; // 수정 모드 추적용
 var chartInstance = null;
 
-// 일일 점검 고정 템플릿
+// 일일 점검 고정 템플릿 (실제 방송인프라 점검표 기준)
 var chkItems = [
-  {id:1, cat:"전력", text:"UPS 입력 전압 정상 유무 (220V/380V ±10%) 상태 확인", sel:"OK", memo:""},
-  {id:2, cat:"전력", text:"바이패스 전원 공급 및 배전반 차단기 트립 외관 수시 점검", sel:"OK", memo:""},
-  {id:3, cat:"전력", text:"비상 발전기 연료 잔량(70% 이상) 및 수동 기동 전압 체크", sel:"OK", memo:""},
-  {id:4, cat:"시스템", text:"주조정실 레퍼런스 주클럭 마스터/슬레이브 동기화 위상 체크", sel:"OK", memo:""},
-  {id:5, cat:"시스템", text:"스위처 및 메인 라우터 크로스포인트 절체 테스트 상태 확인", sel:"OK", memo:""},
-  {id:6, cat:"시스템", text:"NAS 비디오 서버 스토리지 RAID 볼륨 데드볼륨 유무 모니터링", sel:"OK", memo:""},
-  {id:7, cat:"시스템", text:"송출 통합 오토메이션 인코딩 에러 및 스케줄러 덤프 확인", sel:"OK", memo:""},
-  {id:8, cat:"소방보안", text:"안전 관리 구역 소화설비 압력계 지침 정상 가이드 범위 확인", sel:"OK", memo:""},
-  {id:9, cat:"소방보안", text:"종합 통제 구역 인프라 도어락 및 데드볼트 연동 제어 상태", sel:"OK", memo:""}
+  // 전기/공조 시설 (6개)
+  {id:1,  cat:"전력", text:"DESK and RACK PDU 상태 이상 유무 확인 (ALL 조정실)", sel:"OK", memo:""},
+  {id:2,  cat:"전력", text:"기계실 분전반 상태장 이상유무 확인 (5층·6층 기계실 분전반)", sel:"OK", memo:""},
+  {id:3,  cat:"전력", text:"항온항습기 동작상태 및 압력계·온도계 이상유무 확인 (HP 2.2 이하 / LP 0.1 이상)", sel:"OK", memo:""},
+  {id:4,  cat:"전력", text:"Main/Back up UPS 작동모드·출력상태·배터리 상태 확인 (이벤트 이력, 출력 500V 이상)", sel:"OK", memo:""},
+  {id:5,  cat:"전력", text:"UPS실 에어컨 및 배수 펌프 이상 유무 확인", sel:"OK", memo:""},
+  {id:6,  cat:"전력", text:"대기실 지원시설 설정 확인 (5F SH 대기실 룸 현황판등)", sel:"OK", memo:""},
+  // 시스템 (10개)
+  {id:7,  cat:"시스템", text:"플랫폼 리턴 신호 및 코덱장비 이상유무 확인 / F·S 동작 및 로고키어 송출상태 확인", sel:"OK", memo:""},
+  {id:8,  cat:"시스템", text:"GPS CLOCK and SYNC, AUTO CHANGEOVER 동작 및 세팅상태 확인", sel:"OK", memo:""},
+  {id:9,  cat:"시스템", text:"MODULAR SYSTEM 알람 발생여부 확인 (FRAME ALARM and NMS)", sel:"OK", memo:""},
+  {id:10, cat:"시스템", text:"K2 Storage and AFS Storage 알람 발생여부 확인", sel:"OK", memo:""},
+  {id:11, cat:"시스템", text:"VIDEO SERVER SYSTEM 알람 발생여부 확인 (FRAME, FTP, STORAGE, TAKER, CMS)", sel:"OK", memo:""},
+  {id:12, cat:"시스템", text:"각 서버 디스크 오류 유관 점검", sel:"OK", memo:""},
+  {id:13, cat:"시스템", text:"SCHEDULE PC 당일 업로드 확인", sel:"OK", memo:""},
+  {id:14, cat:"시스템", text:"TALLY, INTERCOM, ROUTER 및 기타 장비 ALARM INDICATOR 확인", sel:"OK", memo:""},
+  {id:15, cat:"시스템", text:"LOUDNESS SYSTEM 알람 발생여부 확인", sel:"OK", memo:""},
+  {id:16, cat:"시스템", text:"ALL SYSTEM 파손 및 보완·보수사항 확인", sel:"OK", memo:""},
+  // 산업안전 자율점검 (4개)
+  {id:17, cat:"소방보안", text:"조명·전기 이상 여부 확인 (조명기 고정상태, 전기설비 접지 상태 등)", sel:"OK", memo:""},
+  {id:18, cat:"소방보안", text:"난간 위험 및 낙상 위험 확인", sel:"OK", memo:""},
+  {id:19, cat:"소방보안", text:"비인가 전열기 사용 확인", sel:"OK", memo:""},
+  {id:20, cat:"소방보안", text:"바닥 미끄럼 위해 요소 및 스튜디오 파손 여부 확인", sel:"OK", memo:""}
 ];
 
 window.onload = function() {
@@ -516,7 +581,7 @@ function initDailyCheckList() {
       currentCat = item.cat;
       block = document.createElement('div');
       block.className = "cat-block";
-      var lbl = currentCat === "전력" ? "⚡ 전력 공급 인프라 단원" : currentCat === "시스템" ? "🖥️ 방송 연동 시스템 단원" : "🛡️ 소방 및 재해 보안 시스템";
+      var lbl = currentCat === "전력" ? "⚡ 전기 / 공조 시설 점검" : currentCat === "시스템" ? "🖥️ 방송 연동 시스템 점검" : "🛡️ 산업안전 자율점검";
       var cls = currentCat === "전력" ? "cat-elec" : currentCat === "시스템" ? "cat-sys" : "cat-safe";
       block.innerHTML = `<div class="cat-header ${cls}">${lbl}</div>`;
       container.appendChild(block);
@@ -540,6 +605,18 @@ function initDailyCheckList() {
     `;
     block.appendChild(div);
   });
+
+  // 기타 적당 사항 / 불량내용 및 조치사항
+  var etcBlock = document.createElement('div');
+  etcBlock.className = "cat-block";
+  etcBlock.innerHTML = `
+    <div class="cat-header" style="background:#F3F4F6;border-color:#D1D5DB;color:#374151">📌 기타 적당 사항 / 불량내용 및 조치사항</div>
+    <div style="padding:4px 0">
+      <textarea id="chk-etc" placeholder="특이사항, 불량내용, 추가 조치사항 등을 자유롭게 기재하세요." style="width:100%;padding:9px 12px;border:1px solid var(--border-dark);border-radius:var(--radius);font-size:13px;resize:none;height:64px;outline:none;background:var(--surface);color:var(--text);"></textarea>
+    </div>
+  `;
+  container.appendChild(etcBlock);
+
   calcProgress();
 }
 
@@ -584,6 +661,11 @@ function valTH(zone) {
   if(t >= 18 && t <= 25 && h >= 30 && h <= 60) dot.className = "zdot ok";
   else dot.className = "zdot warn";
 }
+function getZoneVal(zone) {
+  var t = document.getElementById('th-'+zone+'-t').value;
+  var h = document.getElementById('th-'+zone+'-h').value;
+  return t + "°C / " + h + "%";
+}
 
 function submitDailyCheck() {
   if(!GAS_URL) { alert("설정에서 구글 Apps Script Web App URL을 입력하세요."); return; }
@@ -591,9 +673,13 @@ function submitDailyCheck() {
     date: document.getElementById('chk-date').value,
     shift: document.getElementById('chk-shift').value,
     person: document.getElementById('chk-worker').value.trim(),
-    th_A: document.getElementById('th-A-t').value + "°C / " + document.getElementById('th-A-h').value + "%",
-    th_B: document.getElementById('th-B-t').value + "°C / " + document.getElementById('th-B-h').value + "%",
-    th_M: document.getElementById('th-M-t').value + "°C / " + document.getElementById('th-M-h').value + "%"
+    th_AP: getZoneVal('AP'),
+    th_MC: getZoneVal('MC'),
+    th_MR: getZoneVal('MR'),
+    th_BP: getZoneVal('BP'),
+    th_BM: getZoneVal('BM'),
+    th_UP: getZoneVal('UP'),
+    etc: (document.getElementById('chk-etc')||{}).value || ""
   };
   if(!master.person) { alert("책임 점검자 이름을 입력해 주세요."); return; }
   
@@ -605,11 +691,14 @@ function submitDailyCheck() {
     }
   });
 
+  var errCnt = details.filter(d=>d.result==='ERR').length;
+  var warnCnt = details.filter(d=>d.result==='WARN').length;
+
   setBarState('loading', '구글 시트 점검 데이터 분산 전송 중...');
   fetch(GAS_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({ action: "saveDailyCheck", master: master, details: details })
+    body: JSON.stringify({ action: "saveDailyCheck", master: master, details: details, errCount: errCnt, warnCount: warnCnt })
   })
   .then(res => res.json())
   .then(res => {
@@ -617,7 +706,7 @@ function submitDailyCheck() {
       setBarState('ok', '일일 점검 결과가 구글 시트 테이블에 추가되었습니다.');
       alert("구글 시트에 행 단위 저장이 완료되었습니다.");
     } else {
-      setBarState('error', '제출 실패: ' + res.error);
+      setBarState('error', '제출 실패: ' + (res.error||''));
     }
   })
   .catch(err => setBarState('error', '네트워크 연동 실패: ' + err.toString()));
@@ -893,6 +982,41 @@ function setSev(s) {
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
+function openEvModal(idx) {
+  currentEvIdx = idx;
+  if(idx >= 0 && currentLoadedHistory[idx]) {
+    var ev = currentLoadedHistory[idx];
+    document.getElementById('modal-ev-title').innerText = "이력 수정";
+    document.getElementById('ev-date').value = ev.date || today;
+    document.getElementById('ev-type').value = ev.type || '정기점검';
+    document.getElementById('ev-person').value = ev.person || '';
+    document.getElementById('ev-symptom').value = ev.symptom || '';
+    document.getElementById('ev-desc').value = ev.desc || '';
+    document.getElementById('ev-parts').value = ev.parts || '';
+    document.getElementById('ev-vendor').value = ev.vendor || '';
+    document.getElementById('ev-cost').value = ev.cost || 0;
+    document.getElementById('ev-action').value = ev.action || '';
+    document.getElementById('ev-result').value = ev.result || '완료';
+    document.getElementById('ev-followup').value = ev.followup || '';
+    setSev(ev.sev || 'low');
+  } else {
+    document.getElementById('modal-ev-title').innerText = "이력 추가";
+    document.getElementById('ev-date').value = today;
+    document.getElementById('ev-type').value = '정기점검';
+    document.getElementById('ev-person').value = '';
+    document.getElementById('ev-symptom').value = '';
+    document.getElementById('ev-desc').value = '';
+    document.getElementById('ev-parts').value = '';
+    document.getElementById('ev-vendor').value = '자체 정비';
+    document.getElementById('ev-cost').value = 0;
+    document.getElementById('ev-action').value = '';
+    document.getElementById('ev-result').value = '완료';
+    document.getElementById('ev-followup').value = '';
+    setSev('low');
+  }
+  document.getElementById('evModal').classList.add('open');
+}
+
 function reloadData() {
   loadEquipmentsFromServer();
   if(selectedEquipIdx >= 0) selectEquip(selectedEquipIdx);
@@ -911,16 +1035,21 @@ function updateStats() {
 
 // --- [통계 대시보드 실시간 일일점검 이력 데이터 테이블 매칭] ---
 function initDashboard() {
-  document.getElementById('av-at').innerText = "22.5 °C";
-  document.getElementById('av-ah').innerText = "45 %";
-  document.getElementById('av-bt').innerText = "23.1 °C";
-  document.getElementById('av-bh').innerText = "42 %";
-  document.getElementById('av-mt').innerText = "21.8 °C";
-  document.getElementById('av-mh').innerText = "48 %";
+  document.getElementById('av-apt').innerText = document.getElementById('th-AP-t').value + " °C";
+  document.getElementById('av-aph').innerText = document.getElementById('th-AP-h').value + " %";
+  document.getElementById('av-mct').innerText = document.getElementById('th-MC-t').value + " °C";
+  document.getElementById('av-mch').innerText = document.getElementById('th-MC-h').value + " %";
+  document.getElementById('av-mrt').innerText = document.getElementById('th-MR-t').value + " °C";
+  document.getElementById('av-mrh').innerText = document.getElementById('th-MR-h').value + " %";
+  document.getElementById('av-bpt').innerText = document.getElementById('th-BP-t').value + " °C";
+  document.getElementById('av-bph').innerText = document.getElementById('th-BP-h').value + " %";
+  document.getElementById('av-bmt').innerText = document.getElementById('th-BM-t').value + " °C";
+  document.getElementById('av-bmh').innerText = document.getElementById('th-BM-h').value + " %";
+  document.getElementById('av-upt').innerText = document.getElementById('th-UP-t').value + " °C";
+  document.getElementById('av-uph').innerText = document.getElementById('th-UP-h').value + " %";
   
   if(!GAS_URL) return;
   
-  // DailyChecks 실시간 행 갯수 기반 통계 바인딩 수립
   fetch(`${GAS_URL}?action=getDailyCheckHistory`)
     .then(res => res.json())
     .then(history => {
@@ -929,15 +1058,69 @@ function initDashboard() {
       
       var tableBody = document.getElementById('dash-infra-table');
       if(tableBody && count > 0) {
+        var elecOK = history.filter(h=>parseInt(h.elecOk||0)>0).length;
+        var sysOK  = history.filter(h=>parseInt(h.sysOk||0)>0).length;
+        var safeOK = history.filter(h=>parseInt(h.safeOk||0)>0).length;
         tableBody.innerHTML = `
-          <tr><td>전력 공급 인프라</td><td>${count}회</td><td>${count}건 완료</td><td><span class="badge b-ok">안정운용</span></td></tr>
-          <tr><td>방송 연동 시스템</td><td>${count}회</td><td>${count}건 완료</td><td><span class="badge b-ok">동기화정상</span></td></tr>
-          <tr><td>소방/보안 시스템</td><td>${count}회</td><td>${count}건 완료</td><td><span class="badge b-ok">정상가동</span></td></tr>
+          <tr><td>전기/공조 시설</td><td>${count}회</td><td>${elecOK}건 완료</td><td><span class="badge b-ok">안정운용</span></td></tr>
+          <tr><td>방송 시스템</td><td>${count}회</td><td>${sysOK}건 완료</td><td><span class="badge b-ok">동기화정상</span></td></tr>
+          <tr><td>산업안전 자율점검</td><td>${count}회</td><td>${safeOK}건 완료</td><td><span class="badge b-ok">정상가동</span></td></tr>
         `;
       }
       renderChart(history || []);
+      renderDailyHistTable(history || []);
     })
     .catch(() => renderChart([]));
+}
+
+function loadDailyHistory() {
+  if(!GAS_URL) { alert("구글 시트 URL을 먼저 설정하세요."); return; }
+  document.getElementById('hist-from').value = "";
+  document.getElementById('hist-to').value = "";
+  fetch(`${GAS_URL}?action=getDailyCheckHistory`)
+    .then(res => res.json())
+    .then(data => renderDailyHistTable(data || []))
+    .catch(err => alert("이력 조회 실패: " + err));
+}
+
+function filterDailyHistory() {
+  if(!GAS_URL) return;
+  var from = document.getElementById('hist-from').value;
+  var to   = document.getElementById('hist-to').value;
+  fetch(`${GAS_URL}?action=getDailyCheckHistory&from=${from}&to=${to}`)
+    .then(res => res.json())
+    .then(data => renderDailyHistTable(data || []))
+    .catch(err => alert("필터 조회 실패: " + err));
+}
+
+function renderDailyHistTable(list) {
+  var tbody = document.getElementById('daily-hist-body');
+  if(!tbody) return;
+  if(!list || list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:var(--faint);padding:20px;">조회된 이력이 없습니다.</td></tr>`;
+    return;
+  }
+  list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  tbody.innerHTML = list.map(h => {
+    var errCnt = parseInt(h.errCount||0);
+    var warnCnt = parseInt(h.warnCount||0);
+    var errBadge = errCnt > 0 ? `<span class="badge b-err">${errCnt}건</span>` : '<span class="badge b-ok">없음</span>';
+    var warnBadge = warnCnt > 0 ? `<span class="badge b-warn">${warnCnt}건</span>` : '<span class="badge b-ok">없음</span>';
+    return `<tr>
+      <td style="font-weight:600">${h.date||'-'}</td>
+      <td>${(h.shift||'-').replace('주간 (09:00~18:00)','주간').replace('야간 (18:00~09:00)','야간')}</td>
+      <td>${h.person||'-'}</td>
+      <td style="font-size:11px">${h.th_AP||'-'}</td>
+      <td style="font-size:11px">${h.th_MC||'-'}</td>
+      <td style="font-size:11px">${h.th_MR||'-'}</td>
+      <td style="font-size:11px">${h.th_BP||'-'}</td>
+      <td style="font-size:11px">${h.th_BM||'-'}</td>
+      <td style="font-size:11px">${h.th_UP||'-'}</td>
+      <td style="text-align:center">${h.totalCount||'-'}개</td>
+      <td style="text-align:center">${errBadge}</td>
+      <td style="text-align:center">${warnBadge}</td>
+    </tr>`;
+  }).join('');
 }
 
 function renderChart(historyData) {
