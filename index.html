@@ -412,7 +412,14 @@ tr:hover td{background:var(--bg)}
         </div>
         <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px">
           <div class="card">
-            <div class="section-label">최근 일일 점검 완료 추이 (구글 시트 연동)</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div class="section-label" style="margin:0">온습도 최근 7일 현황 (6개소)</div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <button class="btn-ghost btn-sm" id="th-mode-temp" onclick="setThMode('temp')" style="border-color:var(--red);color:var(--red);font-weight:700">온도</button>
+                <button class="btn-ghost btn-sm" id="th-mode-humi" onclick="setThMode('humi')">습도</button>
+              </div>
+            </div>
+            <div class="legend-row" id="th-legend"></div>
             <div class="chart-wrap"><canvas id="dashChart"></canvas></div>
           </div>
           <div class="card">
@@ -1048,7 +1055,7 @@ function initDashboard() {
   document.getElementById('av-upt').innerText = document.getElementById('th-UP-t').value + " °C";
   document.getElementById('av-uph').innerText = document.getElementById('th-UP-h').value + " %";
   
-  if(!GAS_URL) return;
+  if(!GAS_URL) { buildThChart([]); return; }
   
   fetch(`${GAS_URL}?action=getDailyCheckHistory`)
     .then(res => res.json())
@@ -1067,10 +1074,10 @@ function initDashboard() {
           <tr><td>산업안전 자율점검</td><td>${count}회</td><td>${safeOK}건 완료</td><td><span class="badge b-ok">정상가동</span></td></tr>
         `;
       }
-      renderChart(history || []);
       renderDailyHistTable(history || []);
+      buildThChart(history || []);
     })
-    .catch(() => renderChart([]));
+    .catch(() => buildThChart([]));
 }
 
 function loadDailyHistory() {
@@ -1123,27 +1130,122 @@ function renderDailyHistTable(list) {
   }).join('');
 }
 
-function renderChart(historyData) {
+}
+
+// 온도/습도 모드 전환
+var thMode = 'temp';
+function setThMode(mode) {
+  thMode = mode;
+  var tBtn = document.getElementById('th-mode-temp');
+  var hBtn = document.getElementById('th-mode-humi');
+  tBtn.style.cssText = mode==='temp' ? 'border-color:var(--red);color:var(--red);font-weight:700' : '';
+  hBtn.style.cssText = mode==='humi' ? 'border-color:var(--blue);color:var(--blue);font-weight:700' : '';
+  buildThChart(window._lastThHistory || []);
+}
+
+function buildThChart(historyData) {
+  window._lastThHistory = historyData;
+
+  // 최근 7일 날짜 레이블
+  var today7 = new Date();
+  var labels = [];
+  var dateKeys = [];
+  for(var i = 6; i >= 0; i--) {
+    var d = new Date(today7); d.setDate(d.getDate() - i);
+    var mm = String(d.getMonth()+1).padStart(2,'0');
+    var dd = String(d.getDate()).padStart(2,'0');
+    labels.push(mm + '/' + dd);
+    dateKeys.push(d.getFullYear() + '-' + mm + '-' + dd);
+  }
+
+  var zones = [
+    {key:'th_AP', name:'A 부조정실', color:'rgba(208,2,27,0.9)'},
+    {key:'th_MC', name:'주조정실',   color:'rgba(29,111,164,0.9)'},
+    {key:'th_MR', name:'통합기계실', color:'rgba(5,150,105,0.9)'},
+    {key:'th_BP', name:'B 부조정실', color:'rgba(217,119,6,0.9)'},
+    {key:'th_BM', name:'B 기계실',   color:'rgba(124,58,237,0.9)'},
+    {key:'th_UP', name:'UPS실',      color:'rgba(107,114,128,0.9)'}
+  ];
+
+  var datasets = zones.map(function(z) {
+    var vals = dateKeys.map(function(dateStr) {
+      var matches = historyData.filter(function(h){ return (h.date||'').startsWith(dateStr); });
+      if(!matches.length) return null;
+      var raw = matches[matches.length-1][z.key] || '';
+      if(thMode === 'temp') {
+        var m = raw.match(/([\d.]+)°C/); return m ? parseFloat(m[1]) : null;
+      } else {
+        var m = raw.match(/([\d.]+)%/);  return m ? parseFloat(m[1]) : null;
+      }
+    });
+    return {
+      label: z.name,
+      data: vals,
+      borderColor: z.color,
+      backgroundColor: z.color.replace('0.9','0.08'),
+      borderWidth: 2.5,
+      pointRadius: 4,
+      pointHoverRadius: 7,
+      tension: 0.35,
+      spanGaps: true,
+      fill: false
+    };
+  });
+
+  // 기준선
+  var refVal   = thMode === 'temp' ? 22 : 45;
+  var refLabel = thMode === 'temp' ? '기준(22°C)' : '기준(45%)';
+  datasets.push({
+    label: refLabel,
+    data: labels.map(function(){ return refVal; }),
+    borderColor: 'rgba(0,0,0,0.18)',
+    borderDash: [5,4],
+    borderWidth: 1.5,
+    pointRadius: 0,
+    tension: 0,
+    spanGaps: true,
+    fill: false
+  });
+
   var ctx = document.getElementById('dashChart').getContext('2d');
   if(chartInstance) chartInstance.destroy();
-  
-  var labels = ['06/16', '06/17', '06/18', '06/19', '06/20', '06/21', '06/22(오늘)'];
-  var dataCounts = [1, 2, 1, 1, 3, 1, historyData.length || 2];
-  
   chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [
-        { label: '실시간 정기점검 완료 추이', data: dataCounts, backgroundColor: 'rgba(29, 111, 164, 0.7)' }
-      ]
-    },
+    type: 'line',
+    data: { labels: labels, datasets: datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var v = ctx.parsed.y;
+              if(v === null || v === undefined) return ctx.dataset.label + ': -';
+              return ctx.dataset.label + ': ' + v + (thMode==='temp' ? ' °C' : ' %');
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          title: { display: true, text: thMode==='temp' ? '온도 (°C)' : '습도 (%)', font:{size:11} },
+          ticks: { font:{size:11} }
+        },
+        x: { ticks: { font:{size:11} } }
+      }
     }
   });
+
+  // 커스텀 범례
+  var legendEl = document.getElementById('th-legend');
+  if(legendEl) {
+    legendEl.innerHTML = zones.map(function(z){
+      return '<div class="leg"><div style="width:18px;height:3px;background:'+z.color+';border-radius:2px;flex-shrink:0"></div>'+z.name+'</div>';
+    }).join('') + '<div class="leg"><div style="width:18px;height:2px;background:rgba(0,0,0,0.2);border-radius:2px;flex-shrink:0"></div>기준치</div>';
+  }
 }
 </script>
 </body>
